@@ -184,23 +184,29 @@ Widget messageToShow({required MessageEnum type, required String message}) {
 //luu anh
 Future<String> storeFileToCloudinary({
   required File file,
-  required String
-  reference, // Không dùng reference với Cloudinary nhưng giữ để phù hợp cấu trúc
+  required String reference, // Giữ lại tham số 'reference' như yêu cầu
 }) async {
   try {
     const String cloudName = 'dzpnecose';
 
+    // Kiểm tra loại tệp (image/video) dựa trên phần mở rộng
+    String fileExtension = file.path.split('.').last.toLowerCase();
+    String resourceType = (fileExtension == 'mp4' || fileExtension == 'mov' || fileExtension == 'avi' || fileExtension == 'webm')
+        ? 'video' // Nếu là video
+        : 'image'; // Nếu là hình ảnh
+
     // URL API của Cloudinary
     final Uri uploadUrl =
-    Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
+    Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/$resourceType/upload');
 
     // Chuẩn bị request multipart để upload
     var request = http.MultipartRequest('POST', uploadUrl);
 
     // Các thông tin cần thiết
     request.fields['upload_preset'] = 'ml_default';
-    request.fields['folder'] =
-    'user_images'; // Thư mục lưu trữ ảnh trên Cloudinary
+    request.fields['folder'] = 'user_files'; // Thư mục lưu trữ (có thể thay đổi)
+
+    // Thêm tệp vào request
     request.files.add(await http.MultipartFile.fromPath(
       'file',
       file.path,
@@ -215,15 +221,17 @@ Future<String> storeFileToCloudinary({
       var responseData = await response.stream.bytesToString();
       var data = jsonDecode(responseData);
 
-      // Trả về URL ảnh
+      // Trả về URL của tệp đã tải lên
       return data['secure_url'];
     } else {
-      throw Exception('Failed to upload image: ${response.reasonPhrase}');
+      throw Exception('Failed to upload file: ${response.reasonPhrase}');
     }
   } catch (e) {
+    print(e.toString());
     throw Exception('Error uploading to Cloudinary: $e');
   }
 }
+
 
 // animated dialog
 void showMyAnimatedDialog({

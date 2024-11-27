@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
@@ -21,6 +22,7 @@ class ChatProvider extends ChangeNotifier {
   String get searchQuery => _searchQuery;
 
   bool get isLoading => _isLoading;
+
   MessageReplyModel? get messageReplyModel => _messageReplyModel;
 
   void setSearchQuery(String value) {
@@ -63,8 +65,8 @@ class ChatProvider extends ChangeNotifier {
       String repliedTo = _messageReplyModel == null
           ? ''
           : _messageReplyModel!.isMe
-          ? 'You'
-          : _messageReplyModel!.senderName;
+              ? 'You'
+              : _messageReplyModel!.senderName;
       MessageEnum repliedMessageType =
           _messageReplyModel?.messageType ?? MessageEnum.text;
 
@@ -153,8 +155,8 @@ class ChatProvider extends ChangeNotifier {
       String repliedTo = _messageReplyModel == null
           ? ''
           : _messageReplyModel!.isMe
-          ? 'You'
-          : _messageReplyModel!.senderName;
+              ? 'You'
+              : _messageReplyModel!.senderName;
       MessageEnum repliedMessageType =
           _messageReplyModel?.messageType ?? MessageEnum.text;
 
@@ -293,50 +295,6 @@ class ChatProvider extends ChangeNotifier {
           .collection(Constants.chats)
           .doc(messageModel.senderUID)
           .set(contactLastMessage.toMap());
-
-      // // run transaction
-      // await _firestore.runTransaction((transaction) async {
-      //   // 3. send message to sender firestore location
-      //   transaction.set(
-      //     _firestore
-      //         .collection(Constants.users)
-      //         .doc(messageModel.senderUID)
-      //         .collection(Constants.chats)
-      //         .doc(contactUID)
-      //         .collection(Constants.messages)
-      //         .doc(messageModel.messageId),
-      //     messageModel.toMap(),
-      //   );
-      //   // 4. send message to contact firestore location
-      //   transaction.set(
-      //     _firestore
-      //         .collection(Constants.users)
-      //         .doc(contactUID)
-      //         .collection(Constants.chats)
-      //         .doc(messageModel.senderUID)
-      //         .collection(Constants.messages)
-      //         .doc(messageModel.messageId),
-      //     contactMessageModel.toMap(),
-      //   );
-      //   // 5. send the last message to sender firestore location
-      //   transaction.set(
-      //     _firestore
-      //         .collection(Constants.users)
-      //         .doc(messageModel.senderUID)
-      //         .collection(Constants.chats)
-      //         .doc(contactUID),
-      //     senderLastMessage.toMap(),
-      //   );
-      //   // 6. send the last message to contact firestore location
-      //   transaction.set(
-      //     _firestore
-      //         .collection(Constants.users)
-      //         .doc(contactUID)
-      //         .collection(Constants.chats)
-      //         .doc(messageModel.senderUID),
-      //     contactLastMessage.toMap(),
-      //   );
-      // });
 
       // 7.call onSucess
       // set loading to false
@@ -482,7 +440,9 @@ class ChatProvider extends ChangeNotifier {
       // set loading to false
       setLoading(false);
     } catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
     }
   }
 
@@ -666,10 +626,10 @@ class ChatProvider extends ChangeNotifier {
       if (deleteForEveryone) {
         // get all group members uids and put them in deletedBy list
         final groupData =
-        await _firestore.collection(Constants.groups).doc(contactUID).get();
+            await _firestore.collection(Constants.groups).doc(contactUID).get();
 
         final List<String> groupMembers =
-        List<String>.from(groupData.data()![Constants.membersUIDs]);
+            List<String>.from(groupData.data()![Constants.membersUIDs]);
 
         // update the message as deleted for everyone
         await _firestore
@@ -682,6 +642,7 @@ class ChatProvider extends ChangeNotifier {
         if (messageType != MessageEnum.text.name) {
           // delete the file from storage
           await deleteFileFromStorage(
+
             currentUserId: currentUserId,
             contactUID: contactUID,
             messageId: messageId,
@@ -749,7 +710,7 @@ class ChatProvider extends ChangeNotifier {
     // delete the file from storage
     await firebaseStorage
         .ref(
-        '${Constants.chatFiles}/$messageType/$currentUserId/$contactUID/$messageId')
+            '${Constants.chatFiles}/$messageType/$currentUserId/$contactUID/$messageId')
         .delete();
   }
 
@@ -760,13 +721,13 @@ class ChatProvider extends ChangeNotifier {
   }) {
     return groupId.isNotEmpty
         ? _firestore
-        .collection(Constants.groups)
-        .where(Constants.membersUIDs, arrayContains: userId)
-        .snapshots()
+            .collection(Constants.groups)
+            .where(Constants.membersUIDs, arrayContains: userId)
+            .snapshots()
         : _firestore
-        .collection(Constants.users)
-        .doc(userId)
-        .collection(Constants.chats)
-        .snapshots();
+            .collection(Constants.users)
+            .doc(userId)
+            .collection(Constants.chats)
+            .snapshots();
   }
 }
