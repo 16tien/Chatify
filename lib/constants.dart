@@ -3,6 +3,7 @@ class Constants {
   static const String landingScreen = '/landingScreen';
   static const String loginScreen = '/loginScreen';
   static const String otpScreen = '/otpScreen';
+  static const String registerScreen = '/registerScreen';
   static const String userInformationScreen = '/userInformationScreen';
   static const String homeScreen = '/homeScreen';
   static const String chatScreen = '/chatScreen';
@@ -17,10 +18,11 @@ class Constants {
   static const String termsAndConditionsScreen = '/termsAndConditionsScreen';
   static const String groupSettingsScreen = '/groupSettingsScreen';
   static const String groupInformationScreen = '/groupInformationScreen';
+  static const String callScreen = '/callScreen';
 
   static const String uid = 'uid';
   static const String name = 'name';
-  static const String phoneNumber = 'phoneNumber';
+  static const String email = 'email';
   static const String image = 'image';
   static const String token = 'token';
   static const String aboutMe = 'aboutMe';
@@ -93,4 +95,8 @@ class Constants {
   static const String friendRequestNotification = 'friendRequestNotification';
   static const String requestReplyNotification = 'requestReplyNotification';
   static const String groupRequestNotification = 'groupRequestNotification';
+
+
+
+
 }

@@ -25,7 +25,7 @@ class InfoDetailsCard extends StatelessWidget {
     // get current user
     final authProvider = context.read<AuthenticationProvider>();
     final uid = authProvider.userModel!.uid;
-    final phoneNumber = authProvider.userModel!.phoneNumber;
+    final phoneNumber = authProvider.userModel!.email;
     // get profile image
     final profileImage = userModel != null
         ? userModel!.image

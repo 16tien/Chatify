@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
@@ -40,8 +39,8 @@ class GroupProvider extends ChangeNotifier {
     adminsUIDs: [],
     awaitingApprovalUIDs: [],
   );
-  List<UserModel> _groupMembersList = [];
-  List<UserModel> _groupAdminsList = [];
+  final List<UserModel> _groupMembersList = [];
+  final List<UserModel> _groupAdminsList = [];
 
   List<UserModel> _tempGroupMembersList = [];
   List<UserModel> _tempGoupAdminsList = [];

@@ -8,6 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+import '../main_screen/video_call_screen.dart';
+
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
 
@@ -45,7 +47,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
               imageUrl: userModel.image,
               radius: 20,
               onTap: () {
-                // navigate to this friends profile with uid as argument
+                // Navigate to this friend's profile with UID as argument
                 Navigator.pushNamed(context, Constants.profileScreen,
                     arguments: userModel.uid);
               },
@@ -73,9 +75,36 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 ),
               ],
             ),
+            const Spacer(),
+            // Thêm nút gọi ở đây
+            IconButton(
+              icon: Icon(Icons.call),
+              onPressed: () {
+                // Xử lý gọi điện khi nhấn nút
+                _startCall(userModel);
+              },
+            ),
           ],
         );
       },
     );
   }
+
+  // Hàm để xử lý cuộc gọi
+  void _startCall(UserModel user) {
+    final String currentUserId = context.read<AuthenticationProvider>().uid.toString();
+    final String callId = "${currentUserId}_${user.uid}"; // Tạo mã phòng duy nhất
+
+
+  }
+
+
+// Ví dụ: Dùng `url_launcher` để gọi điện
+// Future<void> _makePhoneCall(String phoneNumber) async {
+//   final Uri launchUri = Uri(
+//     scheme: 'tel',
+//     path: phoneNumber,
+//   );
+//   await launch(launchUri.toString());
+// }
 }

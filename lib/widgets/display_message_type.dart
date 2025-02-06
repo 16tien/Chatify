@@ -51,10 +51,11 @@ class DisplayMessageType extends StatelessWidget {
           return isReply
               ? const Icon(Icons.video_collection)
               : VideoPlayerWidget(
-            videoUrl: message,
-            color: color,
-            viewOnly: viewOnly,
+            videoUrl: message,    // Đường dẫn video
+            color: color,         // Màu sắc cho icon play/pause
+            viewOnly: viewOnly,   // Trạng thái chỉ xem hoặc có thể điều khiển video
           );
+
         case MessageEnum.audio:
           return isReply
               ? const Icon(Icons.audiotrack)

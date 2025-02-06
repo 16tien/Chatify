@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
@@ -20,13 +22,20 @@ class _LandingScreenState extends State<LandingScreen> {
   }
 
   void checkAthentication() async {
-    final authProvider = context.read<AuthenticationProvider>();
-    bool isAuthenticated = await authProvider.checkAuthenticationState();
+    try {
+      final authProvider = context.read<AuthenticationProvider>();
+      bool isAuthenticated = await authProvider.checkAuthenticationState();
 
-    navigate(isAuthenticated: isAuthenticated);
+      // Điều hướng sau khi xác định trạng thái xác thực
+      navigate(isAuthenticated: isAuthenticated);
+    } catch (e) {
+      log('Lỗi khi kiểm tra xác thực: $e');
+      // Có thể điều hướng đến màn hình đăng nhập nếu gặp lỗi
+      Navigator.pushReplacementNamed(context, Constants.loginScreen);
+    }
   }
 
-  navigate({required bool isAuthenticated}) {
+  void navigate({required bool isAuthenticated}) {
     if (isAuthenticated) {
       Navigator.pushReplacementNamed(context, Constants.homeScreen);
     } else {

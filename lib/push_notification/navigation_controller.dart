@@ -9,11 +9,11 @@ import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:provider/provider.dart';
 
-navigationControler({
+navigationController({
   required BuildContext context,
   required RemoteMessage message,
 }) {
-  //if (context == null) return;
+
 
   switch (message.data[Constants.notificationType]) {
     case Constants.chatNotification:
@@ -82,13 +82,7 @@ navigationControler({
         );
       });
       break;
-  // case Constants.friendRequestNotification:
-  //   // navigate to friend requests screen
-  //         Navigator.pushNamed(
-  //           context,
-  //           Constants.friendRequestsScreen,
-  //         );
-  // break;
+
     default:
       print('No Notification');
   }

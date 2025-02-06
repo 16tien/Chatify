@@ -3,7 +3,7 @@ import 'package:chat_app/constants.dart';
 class UserModel {
   String uid;
   String name;
-  String phoneNumber;
+  String email;
   String image;
   String token;
   String aboutMe;
@@ -17,7 +17,7 @@ class UserModel {
   UserModel({
     required this.uid,
     required this.name,
-    required this.phoneNumber,
+    required this.email,
     required this.image,
     required this.token,
     required this.aboutMe,
@@ -34,7 +34,7 @@ class UserModel {
     return UserModel(
       uid: map[Constants.uid] ?? '',
       name: map[Constants.name] ?? '',
-      phoneNumber: map[Constants.phoneNumber] ?? '',
+      email: map[Constants.email] ?? '',
       image: map[Constants.image] ?? '',
       token: map[Constants.token] ?? '',
       aboutMe: map[Constants.aboutMe] ?? '',
@@ -54,7 +54,7 @@ class UserModel {
     return {
       Constants.uid: uid,
       Constants.name: name,
-      Constants.phoneNumber: phoneNumber,
+      Constants.email: email,
       Constants.image: image,
       Constants.token: token,
       Constants.aboutMe: aboutMe,

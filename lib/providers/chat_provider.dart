@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/last_message_model.dart';

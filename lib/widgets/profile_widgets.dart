@@ -78,9 +78,8 @@ class ProfileStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: Row(
+    return
+ Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FriendsButton(
@@ -93,8 +92,7 @@ class ProfileStatusWidget extends StatelessWidget {
             userModel: userModel,
           ),
         ],
-      ),
-    );
+      );
   }
 }
 
@@ -171,7 +169,6 @@ class FriendsButton extends StatelessWidget {
                 MyElevatedButton(
                   onPressed: () async {
                     // show unfriend dialog to ask the user if he is sure to unfriend
-                    // create a dialog to confirm logout
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -198,8 +195,7 @@ class FriendsButton extends StatelessWidget {
                                   .read<AuthenticationProvider>()
                                   .removeFriend(friendID: userModel.uid)
                                   .whenComplete(() {
-                                showSnackBar(
-                                    context, 'You are no longer friends');
+                                showSnackBar(context, 'You are no longer friends');
                               });
                             },
                             child: const Text('Yes'),
@@ -209,7 +205,7 @@ class FriendsButton extends StatelessWidget {
                     );
                   },
                   label: 'Unfriend',
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.3, // Giảm width cho nút Unfriend
                   backgroundColor: Colors.deepPurple,
                   textColor: Colors.white,
                 ),
@@ -217,21 +213,19 @@ class FriendsButton extends StatelessWidget {
                 MyElevatedButton(
                   onPressed: () async {
                     // navigate to chat screen
-                    // navigate to chat screen with the folowing arguments
-                    // 1. friend uid 2. friend name 3. friend image 4. groupId with an empty string
-                    Navigator.pushNamed(context, Constants.chatScreen,
-                        arguments: {
-                          Constants.contactUID: userModel.uid,
-                          Constants.contactName: userModel.name,
-                          Constants.contactImage: userModel.image,
-                          Constants.groupId: ''
-                        });
+                    Navigator.pushNamed(context, Constants.chatScreen, arguments: {
+                      Constants.contactUID: userModel.uid,
+                      Constants.contactName: userModel.name,
+                      Constants.contactImage: userModel.image,
+                      Constants.groupId: ''
+                    });
                   },
                   label: 'Chat',
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: MediaQuery.of(context).size.width * 0.3, // Giảm width cho nút Chat
                   backgroundColor: Theme.of(context).cardColor,
                   textColor: Theme.of(context).colorScheme.primary,
                 ),
+
               ],
             );
           } else {

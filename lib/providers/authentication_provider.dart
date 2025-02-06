@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:googleapis_auth/auth_io.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,11 +21,9 @@ class AuthenticationProvider extends ChangeNotifier {
   bool _isSuccessful = false;
   int? _resendToken;
   String? _uid;
-  String? _phoneNumber;
+  String? _email;
   UserModel? _userModel;
-
-  Timer? _timer;
-  int _secondsRemaing = 60;
+  final int _secondsRemaing = 60;
 
   File? _finalFileImage;
   final String _userImage = '';
@@ -37,7 +36,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
   String? get uid => _uid;
 
-  String? get phoneNumber => _phoneNumber;
+  String? get email => _email;
 
   UserModel? get userModel => _userModel;
 
@@ -188,11 +187,23 @@ class AuthenticationProvider extends ChangeNotifier {
 
   // get user data from firestore
   Future<void> getUserDataFromFireStore() async {
-    DocumentSnapshot documentSnapshot =
-        await _firestore.collection(Constants.users).doc(_uid).get();
-    _userModel =
-        UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
-    notifyListeners();
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _firestore.collection(Constants.users).doc(_uid).get();
+
+      // Kiểm tra nếu tài liệu không tồn tại hoặc dữ liệu null
+      if (!documentSnapshot.exists || documentSnapshot.data() == null) {
+        throw Exception("Không tìm thấy dữ liệu người dùng");
+      }
+
+      // Lấy dữ liệu và ép kiểu sang Map<String, dynamic>
+      _userModel =
+          UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
+      notifyListeners(); // Cập nhật UI
+    } catch (e) {
+      log('Lỗi khi lấy dữ liệu người dùng: $e');
+      // Bạn có thể hiển thị thông báo lỗi hoặc xử lý theo nhu cầu
+    }
   }
 
   // save user data to shared preferences
@@ -212,153 +223,53 @@ class AuthenticationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // sign in with phone number
-  Future<void> signInWithPhoneNumber({
-    required String phoneNumber,
+  Future<void> signInWithEmailAndPassword({
+    required String email,
+    required String password,
     required BuildContext context,
   }) async {
     _isLoading = true;
     notifyListeners();
 
-    await _auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await _auth.signInWithCredential(credential).then((value) async {
-          _uid = value.user!.uid;
-          _phoneNumber = value.user!.phoneNumber;
-          _isSuccessful = true;
-          _isLoading = false;
-          notifyListeners();
-        });
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        _isSuccessful = false;
-        _isLoading = false;
-        notifyListeners();
-        showSnackBar(context, e.toString());
-        log('Error: ${e.toString()}');
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        _isLoading = false;
-        _resendToken = resendToken;
-        _secondsRemaing = 60;
-        _startTimer();
-        notifyListeners();
-        // navigate to otp screen
-        Navigator.of(context).pushNamed(
-          Constants.otpScreen,
-          arguments: {
-            Constants.verificationId: verificationId,
-            Constants.phoneNumber: phoneNumber,
-          },
-        );
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-      timeout: const Duration(seconds: 60),
-      forceResendingToken: resendToken,
-    );
-  }
-
-  void _startTimer() {
-    // cancel timer if any exist
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaing > 0) {
-        _secondsRemaing--;
-        notifyListeners();
-      } else {
-        // cancel timer
-        _timer?.cancel();
-        notifyListeners();
-      }
-    });
-  }
-
-// dispose timer
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  // // resend code
-  Future<void> resendCode({
-    required BuildContext context,
-    required String phone,
-  }) async {
-    if (_secondsRemaing == 0 || _resendToken != null) {
-      // allow user to resend code only if timer is not running and resend token exists
-      _isLoading = true;
-      notifyListeners();
-      _isLoading = true;
-      notifyListeners();
-
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phone,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await _auth.signInWithCredential(credential).then((value) async {
-            _uid = value.user!.uid;
-            _phoneNumber = value.user!.phoneNumber;
-            _isSuccessful = true;
-            _isLoading = false;
-            notifyListeners();
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          _isSuccessful = false;
-          _isLoading = false;
-          notifyListeners();
-          showSnackBar(context, e.toString());
-        },
-        codeSent: (String verificationId, int? resendToken) async {
-          _isLoading = false;
-          _resendToken = resendToken;
-          notifyListeners();
-          showSnackBar(context, 'Successful sent code');
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-        timeout: const Duration(seconds: 60),
-        forceResendingToken: resendToken,
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-    } else {
-      showSnackBar(context, 'Please wait $_secondsRemaing seconds to resend');
-    }
-  }
-
-  // verify otp code
-  Future<void> verifyOTPCode({
-    required String verificationId,
-    required String otpCode,
-    required BuildContext context,
-    required Function onSuccess,
-  }) async {
-    _isLoading = true;
-    notifyListeners();
-
-    final credential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: otpCode,
-    );
-
-    await _auth.signInWithCredential(credential).then((value) async {
-      _uid = value.user!.uid;
-      _phoneNumber = value.user!.phoneNumber;
+      _uid = userCredential.user!.uid;
       _isSuccessful = true;
       _isLoading = false;
-      onSuccess();
-      notifyListeners();
-    }).catchError((e) {
+      //Get data user
+      await getUserDataFromFireStore();
+      // * save user information to provider / shared preferences
+      await saveUserDataToSharedPreferences();
+      // Điều hướng đến màn hình chính sau khi đăng nhập thành công
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        Constants.homeScreen,
+            (route) => false,
+      );
+    } on FirebaseAuthException catch (e) {
       _isSuccessful = false;
       _isLoading = false;
       notifyListeners();
-      showSnackBar(context, e.toString());
-    });
+
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = "Tài khoản không tồn tại.";
+      } else if (e.code == 'wrong-password') {
+        errorMessage = "Mật khẩu không chính xác.";
+      } else {
+        errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
+      }
+
+      showSnackBar(context, errorMessage);
+    }
   }
 
   // save user data to firestore
   void saveUserDataToFireStore({
     required UserModel userModel,
-    //required File? fileImage,
     required Function onSuccess,
     required Function onFail,
   }) async {
@@ -410,7 +321,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .snapshots();
   }
 
-  // send friend request
   Future<void> sendFriendRequest({
     required String friendID,
   }) async {
@@ -424,6 +334,10 @@ class AuthenticationProvider extends ChangeNotifier {
       await _firestore.collection(Constants.users).doc(_uid).update({
         Constants.sentFriendRequestsUIDs: FieldValue.arrayUnion([friendID]),
       });
+
+      // Gửi thông báo cho người nhận yêu cầu kết bạn
+      await sendPushNotification(friendID, 'Bạn nhận được lời mời kết bạn',
+          'Bạn có một lời mời kết bạn từ $_uid');
     } on FirebaseException catch (e) {
       if (kDebugMode) {
         print(e);
@@ -785,6 +699,128 @@ class AuthenticationProvider extends ChangeNotifier {
       }
     } catch (e) {
       throw Exception('Error uploading to Cloudinary: $e');
+    }
+  }
+
+  Future<String> getBearerToken() async {
+    // Đọc tệp JSON từ thư mục assets
+    String jsonString = await rootBundle.loadString(
+        'assets/flutterchat-e84e9-firebase-adminsdk-8rkwu-e0aeed0456.json');
+    Map<String, dynamic> credentialsJson = jsonDecode(jsonString);
+
+    // Tạo đối tượng ServiceAccountCredentials từ JSON
+    var credentials = ServiceAccountCredentials.fromJson(credentialsJson);
+
+    // Đặt phạm vi truy cập cho Firebase
+    var scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+
+    // Lấy token từ credentials
+    var client = await clientViaServiceAccount(credentials, scopes);
+    return client.credentials.accessToken.data;
+  }
+
+  Future<void> sendPushNotification(
+      String friendID, String title, String body) async {
+    String bearerToken =
+        await getBearerToken(); // Lấy Bearer Token từ Service Account
+    String? token = await getTokenByUID(friendID);
+    final Map<String, dynamic> message = {
+      "message": {
+        "token": token,
+        "notification": {
+          "title": title,
+          "body": body,
+        },
+      },
+    };
+
+    final response = await http.post(
+      Uri.parse(
+          'https://fcm.googleapis.com/v1/projects/flutterchat-e84e9/messages:send'),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(message),
+    );
+
+    if (response.statusCode == 200) {
+      print("Notification sent successfully!");
+    } else {
+      print("Failed to send notification: ${response.body}");
+    }
+  }
+
+  Future<String?> getTokenByUID(String uid) async {
+    try {
+      // Lấy tài liệu người dùng từ Firestore dựa trên UID
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users') // Tên collection của bạn
+          .doc(uid) // UID của người dùng
+          .get();
+
+      // Kiểm tra nếu tài liệu tồn tại
+      if (userDoc.exists) {
+        // Lấy trường 'token' từ tài liệu người dùng
+        String token = userDoc['token'];
+        return token;
+      } else {
+        print("User not found!");
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  Future<void> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    _isLoading = true;
+    notifyListeners(); // Cập nhật trạng thái loading
+
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Kiểm tra nếu đăng ký thành công
+      if (userCredential.user != null) {
+        // Lưu email vào authProvider
+        _email = userCredential.user!.email;
+        _uid = userCredential.user!.uid;
+        // Hiển thị thông báo thành công
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Đăng ký thành công!")),
+        );
+
+        // Chuyển sang màn hình nhập thông tin người dùng
+        Navigator.pushReplacementNamed(
+            context, Constants.userInformationScreen);
+      }
+    } on FirebaseAuthException catch (e) {
+      String message = "Đã có lỗi xảy ra";
+      if (e.code == 'email-already-in-use') {
+        message = "Email này đã được sử dụng!";
+      } else if (e.code == 'weak-password') {
+        message = "Mật khẩu quá yếu!";
+      } else if (e.code == 'invalid-email') {
+        message = "Email không hợp lệ!";
+      } else {
+        message = "Lỗi không xác định: ${e.message}";
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } finally {
+      _isLoading = false;
+      notifyListeners(); // Cập nhật lại UI
     }
   }
 }

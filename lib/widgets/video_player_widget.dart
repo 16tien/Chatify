@@ -24,10 +24,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   void initState() {
-    videoPlayerController = CachedVideoPlayerController.network(
-      widget.videoUrl,
-    )
-      ..addListener(() {})
+    videoPlayerController = CachedVideoPlayerController.network(widget.videoUrl)
+      ..addListener(() {
+        // Cập nhật trạng thái khi video thay đổi
+        if (videoPlayerController.value.isPlaying != isPlaying) {
+          setState(() {
+            isPlaying = videoPlayerController.value.isPlaying;
+          });
+        }
+      })
       ..initialize().then((_) {
         videoPlayerController.setVolume(1);
         setState(() {
@@ -46,13 +51,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: 16 / 9,  // Điều chỉnh tỷ lệ khung hình
       child: Stack(
         children: [
           isLoading
-              ? const Center(
-            child: CircularProgressIndicator(),
-          )
+              ? const Center(child: CircularProgressIndicator())
               : CachedVideoPlayer(videoPlayerController),
           Center(
             child: IconButton(
@@ -65,9 +68,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                   : () {
                 setState(() {
                   isPlaying = !isPlaying;
-                  isPlaying
-                      ? videoPlayerController.play()
-                      : videoPlayerController.pause();
+                  if (isPlaying) {
+                    videoPlayerController.play();
+                  } else {
+                    videoPlayerController.pause();
+                  }
                 });
               },
             ),

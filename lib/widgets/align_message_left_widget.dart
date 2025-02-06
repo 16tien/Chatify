@@ -38,7 +38,8 @@ class AlignMessageLeftWidget extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.7,
           minWidth: MediaQuery.of(context).size.width * 0.3,
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (isGroupChat)
               Padding(
@@ -67,33 +68,29 @@ class AlignMessageLeftWidget extends StatelessWidget {
                       padding: message.messageType == MessageEnum.text
                           ? const EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 10.0)
                           : const EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 10.0),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (isReplying) ...[
-                              MessageReplyPreview(
-                                message: message,
-                                viewOnly: viewOnly,
-                              )
-                            ],
-                            DisplayMessageType(
-                              message: message.message,
-                              type: message.messageType,
-                              color: isDarkMode ? Colors.white : Colors.black,
-                              isReply: false,
+                      child: Column(
+                        children: [
+                          if (isReplying)
+                            MessageReplyPreview(
+                              message: message,
                               viewOnly: viewOnly,
                             ),
-                            Text(
-                              time,
-                              style: TextStyle(
-                                  color: isDarkMode
-                                      ? Colors.white60
-                                      : Colors.grey.shade500,
-                                  fontSize: 10),
-                            ),
-                          ],
-                        ),
+                          DisplayMessageType(
+                            message: message.message,
+                            type: message.messageType,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            isReply: false,
+                            viewOnly: viewOnly,
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                                color: isDarkMode
+                                    ? Colors.white60
+                                    : Colors.grey.shade500,
+                                fontSize: 10),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -111,5 +108,6 @@ class AlignMessageLeftWidget extends StatelessWidget {
         ),
       ),
     );
+
   }
 }

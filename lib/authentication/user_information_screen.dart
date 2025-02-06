@@ -100,32 +100,6 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                           letterSpacing: 1.5),
                     ),
                   ),
-
-                  // RoundedLoadingButton(
-                  //   controller: _btnController,
-                  //   onPressed: () {
-                  //     if (_nameController.text.isEmpty ||
-                  //         _nameController.text.length < 3) {
-                  //       showSnackBar(context, 'Please enter your name');
-                  //       _btnController.reset();
-                  //       return;
-                  //     }
-                  //     // save user data to firestore
-                  //     saveUserDataToFireStore();
-                  //   },
-                  //   successIcon: Icons.check,
-                  //   successColor: Colors.green,
-                  //   errorColor: Colors.red,
-                  //   color: Theme.of(context).primaryColor,
-                  //   child: const Text(
-                  //     'Continue',
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontSize: 16,
-                  //       fontWeight: FontWeight.w500,
-                  //     ),
-                  //   ),
-                  // ),
                 ),
               ],
             ),
@@ -140,7 +114,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
     UserModel userModel = UserModel(
       uid: authProvider.uid!,
       name: _nameController.text.trim(),
-      phoneNumber: authProvider.phoneNumber!,
+      email: authProvider.email!,
       image: '',
       token: '',
       aboutMe: 'Hey there, I\'m using Flutter Chat Pro',

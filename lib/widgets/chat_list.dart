@@ -244,11 +244,13 @@ class _ChatListState extends State<ChatList> {
 
         // automatically scroll to the bottom on new message
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.minScrollExtent,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeInOut,
-          );
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.minScrollExtent,
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+            );
+          }
         });
         if (snapshot.hasData) {
           final messagesList = snapshot.data!;

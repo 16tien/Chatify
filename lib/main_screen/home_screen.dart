@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     initPlatformState();
     requestNotificationPermissions();
     NotificationServices.createNotificationChannelAndInitialize();
@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
   // initialize cloud messaging
   void initCloudMessaging() async {
     // make sure widget is initialized before initializing cloud messaging
-    WidgetsBinding.instance!.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       // 1. generate a new token
       await context.read<AuthenticationProvider>().generateNewToken();
 
@@ -159,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _handleMessage(RemoteMessage message) {
-    navigationControler(context: context, message: message);
+    navigationController(context: context, message: message);
   }
 
   @override

@@ -19,7 +19,6 @@ class NotificationServices {
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
     );
 
     const InitializationSettings initializationSettings =
@@ -47,16 +46,6 @@ class NotificationServices {
     }
   }
 
-  static Future<void> onDidReceiveLocalNotification(
-      int id,
-      String? title,
-      String? body,
-      String? payload,
-      ) async {
-    // handle notification taps here on IOS
-    log('Body: $body');
-    log('payload: $payload');
-  }
 
   static void onDidReceiveNotificationResponse(
       NotificationResponse notificationRespons) {
@@ -66,7 +55,7 @@ class NotificationServices {
       // convert payload to remoteMessage and handle interaction
       final message = RemoteMessage.fromMap(jsonDecode(payload));
       log('message: $message');
-      navigationControler(
+      navigationController(
           context: navigatorKey.currentState!.context, message: message);
     }
   }
