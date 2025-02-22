@@ -1,11 +1,9 @@
-import 'dart:developer';
+
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/main_screen/create_group_screen.dart';
 import 'package:chat_app/main_screen/my_chats_screen.dart';
@@ -40,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    initPlatformState();
     requestNotificationPermissions();
     NotificationServices.createNotificationChannelAndInitialize();
     initCloudMessaging();
@@ -53,32 +50,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  initPlatformState() async {
-    bool appBadgeSupported = false;
-
-    try {
-      bool res = await FlutterAppBadger.isAppBadgeSupported();
-      if (res) {
-        appBadgeSupported = true;
-      } else {
-        appBadgeSupported = false;
-      }
-    } on PlatformException {
-      log('Failed');
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-    setState(() {
-      _appBadgeSupported = appBadgeSupported;
-    });
-    // remove app badge if supported
-    if (_appBadgeSupported) {
-      FlutterAppBadger.removeBadge();
-    }
-  }
 
   // request notification permissions
   void requestNotificationPermissions() async {
@@ -116,8 +87,6 @@ class _HomeScreenState extends State<HomeScreen>
       print('User declined or has not accepted permission');
     }
   }
-
-  // initialize cloud messaging
   void initCloudMessaging() async {
     // make sure widget is initialized before initializing cloud messaging
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -126,18 +95,63 @@ class _HomeScreenState extends State<HomeScreen>
 
       // 2. initialize firebase messaging
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        if (message.notification != null) {
-          // update app badge
-          if (_appBadgeSupported) {
-            FlutterAppBadger.updateBadgeCount(1);
-          }
+        print('Received a new message: ${message.messageId}');
+        print('Data: ${message.data}');
+
+        // Kiểm tra loại thông báo
+        if (message.data['type'] == 'call') {
+          // Thông báo kiểu cuộc gọi
+          print('Call notification received');
+
+          // Log thông báo chờ
+          print('Waiting for user response for 30 seconds...');
+
+          // Hiển thị màn hình chờ cho cuộc gọi
+          showCallWaitingScreen();
+
+          // Chờ 30 giây
+          Future.delayed(Duration(seconds: 30), () {
+            // Kiểm tra xem người dùng có phản hồi không sau 30s
+            // Nếu không phản hồi, hủy cuộc gọi
+            print('Call timeout after 30 seconds');
+            cancelCall();
+          });
+
+        } else {
+          // Thông báo kiểu tin nhắn
+          print('Message notification received');
+
+          // Hiển thị thông báo đẩy
           NotificationServices.displayNotification(message);
+          // Setup background message handler
+          FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+          // 3. setup onMessage handler for interactions
+          setupInteractedMessage();
         }
       });
 
-      // 3. setup onMessage handler
-      setupInteractedMessage();
+
     });
+  }
+
+// Hiển thị màn hình chờ cuộc gọi
+  void showCallWaitingScreen() {
+    // Bạn có thể mở một màn hình chờ cho người dùng ở đây
+
+  }
+
+// Hủy cuộc gọi sau 30 giây nếu không có phản hồi
+  void cancelCall() {
+    // Xử lý logic hủy cuộc gọi ở đây
+    print("Call has been canceled due to timeout.");
+    Navigator.pop(context);
+  }
+
+// Background message handler function
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    print('Handling a background message: ${message.messageId}');
+    // Xử lý trong background tại đây (cập nhật UI, thông báo...)
   }
 
   // It is assumed that all messages contain a data field with the key 'type'
@@ -171,8 +185,6 @@ class _HomeScreenState extends State<HomeScreen>
         context.read<AuthenticationProvider>().updateUserStatus(
           value: true,
         );
-        // remove the badge if the app is resumed
-        FlutterAppBadger.removeBadge();
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
@@ -245,15 +257,15 @@ class _HomeScreenState extends State<HomeScreen>
           items: const [
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.chat_bubble_2),
-              label: 'Chats',
+              label: 'Trò chuyện',
             ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.group),
-              label: 'Groups',
+              label: 'Nhóm',
             ),
             BottomNavigationBarItem(
               icon: Icon(CupertinoIcons.globe),
-              label: 'People',
+              label: 'Mọi người',
             ),
           ],
           currentIndex: currentIndex,

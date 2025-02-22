@@ -727,12 +727,49 @@ class AuthenticationProvider extends ChangeNotifier {
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
+        "data":{
+          "type": "message",
+          "notificationType": "friendRequestNotification"
+        },
         "notification": {
           "title": title,
           "body": body,
         },
       },
     };
+
+    final response = await http.post(
+      Uri.parse(
+          'https://fcm.googleapis.com/v1/projects/flutterchat-e84e9/messages:send'),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(message),
+    );
+
+    if (response.statusCode == 200) {
+      print("Notification sent successfully!");
+    } else {
+      print("Failed to send notification: ${response.body}");
+    }
+  }
+  Future<void> sendCallRequest(String senderId, String receiverId) async {
+    String bearerToken =
+    await getBearerToken(); // Lấy Bearer Token từ Service Account
+    String? token = await getTokenByUID(senderId);
+    final Map<String, dynamic> message = {
+      "message": {
+        "token": token,
+    "data": {
+    "type": "call",
+    "callerId": receiverId, // ID người gọi
+    },
+    "notification": {
+    "title": "Cuộc gọi đến",
+    "body": "Bạn có cuộc gọi mới!",
+    }
+    }};
 
     final response = await http.post(
       Uri.parse(

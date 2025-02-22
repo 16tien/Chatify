@@ -235,7 +235,6 @@ class FriendsButton extends StatelessWidget {
                     .read<AuthenticationProvider>()
                     .sendFriendRequest(friendID: userModel.uid)
                     .whenComplete(() {
-                  showSnackBar(context, 'friend request sent');
                 });
               },
               label: 'Send Request',
