@@ -1,6 +1,8 @@
 
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:chat_app/authentication/register_screen.dart';
+import 'package:chat_app/main_screen/incoming_call_screen.dart';
+import 'package:chat_app/push_notification/notification_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +30,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
@@ -40,6 +43,11 @@ void main() async {
       child: MyApp(savedThemeMode: savedThemeMode),
     ),
   );
+}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+    NotificationServices.displayNotification(message);
+
 }
 
 class MyApp extends StatelessWidget {
@@ -72,6 +80,7 @@ class MyApp extends StatelessWidget {
         routes: {
 
           Constants.landingScreen: (context) => const LandingScreen(),
+          Constants.incomingCallScreen: (context) => const IncomingCallScreen(),
           Constants.registerScreen: (context) => const RegisterScreen(),
           Constants.loginScreen: (context) => const LoginScreen(),
           // Constants.otpScreen: (context) => const OTPScreen(),

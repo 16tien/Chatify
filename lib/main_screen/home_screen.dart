@@ -1,19 +1,17 @@
-
-import 'dart:io';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/main_screen/create_group_screen.dart';
-import 'package:chat_app/main_screen/my_chats_screen.dart';
 import 'package:chat_app/main_screen/groups_screen.dart';
+import 'package:chat_app/main_screen/my_chats_screen.dart';
 import 'package:chat_app/main_screen/people_screen.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/push_notification/navigation_controller.dart';
 import 'package:chat_app/push_notification/notification_services.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   final PageController pageController = PageController(initialPage: 0);
   int currentIndex = 0;
-  bool _appBadgeSupported = false;
 
   final List<Widget> pages = const [
     MyChatsScreen(),
@@ -37,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void initState() {
+    checkPermissions();
     WidgetsBinding.instance.addObserver(this);
     requestNotificationPermissions();
     NotificationServices.createNotificationChannelAndInitialize();
@@ -50,24 +48,12 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-
   // request notification permissions
   void requestNotificationPermissions() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    if (Platform.isIOS) {
-      await messaging.requestPermission(
-        alert: true,
-        announcement: true,
-        badge: true,
-        carPlay: true,
-        criticalAlert: true,
-        provisional: true,
-        sound: true,
-      );
-    }
 
     NotificationSettings notificationSettings =
-    await messaging.requestPermission(
+        await messaging.requestPermission(
       alert: true,
       announcement: true,
       badge: true,
@@ -87,71 +73,37 @@ class _HomeScreenState extends State<HomeScreen>
       print('User declined or has not accepted permission');
     }
   }
+
   void initCloudMessaging() async {
-    // make sure widget is initialized before initializing cloud messaging
+    // Đợi widget khởi tạo trước khi chạy
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // 1. generate a new token
+      // 1. Tạo token mới cho Firebase
       await context.read<AuthenticationProvider>().generateNewToken();
 
-      // 2. initialize firebase messaging
+      // 2. Lắng nghe tin nhắn khi app mở
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print('Received a new message: ${message.messageId}');
         print('Data: ${message.data}');
-
-        // Kiểm tra loại thông báo
         if (message.data['type'] == 'call') {
-          // Thông báo kiểu cuộc gọi
+          // Xử lý thông báo cuộc gọi
           print('Call notification received');
-
-          // Log thông báo chờ
-          print('Waiting for user response for 30 seconds...');
-
-          // Hiển thị màn hình chờ cho cuộc gọi
-          showCallWaitingScreen();
-
-          // Chờ 30 giây
-          Future.delayed(Duration(seconds: 30), () {
-            // Kiểm tra xem người dùng có phản hồi không sau 30s
-            // Nếu không phản hồi, hủy cuộc gọi
-            print('Call timeout after 30 seconds');
-            cancelCall();
-          });
-
+          String callerUid = message.data['callerId'];
+          // Hiển thị màn hình chờ cuộc gọi
+          showCallWaitingScreen(callerUid);
         } else {
-          // Thông báo kiểu tin nhắn
+          // Xử lý thông báo tin nhắn
           print('Message notification received');
-
-          // Hiển thị thông báo đẩy
           NotificationServices.displayNotification(message);
-          // Setup background message handler
-          FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-          // 3. setup onMessage handler for interactions
-          setupInteractedMessage();
         }
       });
-
-
     });
   }
 
 // Hiển thị màn hình chờ cuộc gọi
-  void showCallWaitingScreen() {
+  void showCallWaitingScreen(String callerUid) {
     // Bạn có thể mở một màn hình chờ cho người dùng ở đây
-
-  }
-
-// Hủy cuộc gọi sau 30 giây nếu không có phản hồi
-  void cancelCall() {
-    // Xử lý logic hủy cuộc gọi ở đây
-    print("Call has been canceled due to timeout.");
-    Navigator.pop(context);
-  }
-
-// Background message handler function
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-    print('Handling a background message: ${message.messageId}');
-    // Xử lý trong background tại đây (cập nhật UI, thông báo...)
+    Navigator.pushNamed(context, Constants.incomingCallScreen,
+        arguments: callerUid);
   }
 
   // It is assumed that all messages contain a data field with the key 'type'
@@ -159,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen>
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage? initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+        await FirebaseMessaging.instance.getInitialMessage();
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
@@ -180,24 +132,24 @@ class _HomeScreenState extends State<HomeScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-      // user comes back to the app
-      // update user status to online
+        // user comes back to the app
+        // update user status to online
         context.read<AuthenticationProvider>().updateUserStatus(
-          value: true,
-        );
+              value: true,
+            );
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
-      // app is inactive, paused, detached or hidden
-      // update user status to offline
+        // app is inactive, paused, detached or hidden
+        // update user status to offline
         context.read<AuthenticationProvider>().updateUserStatus(
-          value: false,
-        );
+              value: false,
+            );
         break;
       default:
-      // handle other states
+        // handle other states
         break;
     }
     super.didChangeAppLifecycleState(state);
@@ -238,20 +190,20 @@ class _HomeScreenState extends State<HomeScreen>
         ),
         floatingActionButton: currentIndex == 1
             ? FloatingActionButton(
-          onPressed: () {
-            context
-                .read<GroupProvider>()
-                .clearGroupMembersList()
-                .whenComplete(() {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const CreateGroupScreen(),
-                ),
-              );
-            });
-          },
-          child: const Icon(CupertinoIcons.add),
-        )
+                onPressed: () {
+                  context
+                      .read<GroupProvider>()
+                      .clearGroupMembersList()
+                      .whenComplete(() {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CreateGroupScreen(),
+                      ),
+                    );
+                  });
+                },
+                child: const Icon(CupertinoIcons.add),
+              )
             : null,
         bottomNavigationBar: BottomNavigationBar(
           items: const [
@@ -279,5 +231,17 @@ class _HomeScreenState extends State<HomeScreen>
             });
           },
         ));
+  }
+
+  Future<bool> checkPermissions() async {
+    // Yêu cầu quyền Camera và Microphone
+    PermissionStatus cameraStatus = await Permission.camera.request();
+    PermissionStatus microphoneStatus = await Permission.microphone.request();
+
+    if (cameraStatus.isGranted && microphoneStatus.isGranted) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

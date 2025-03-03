@@ -40,9 +40,9 @@ class NotificationServices {
 
     if (androidImplementation != null) {
       await androidImplementation.createNotificationChannel(
-          NotificationChennels.highInportanceChannel);
+          NotificationChannels.highInportanceChannel);
       await androidImplementation
-          .createNotificationChannel(NotificationChennels.lowInportanceChannel);
+          .createNotificationChannel(NotificationChannels.lowInportanceChannel);
     }
   }
 
@@ -69,7 +69,6 @@ class NotificationServices {
     log('display notification: $message');
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = notification?.android;
-    AppleNotification? apple = notification?.apple;
 
     String channelId = android?.channelId ?? 'default_channel';
 
@@ -82,14 +81,9 @@ class NotificationServices {
           channelId, // Channel id.
           findChannelName(channelId), // Channel name.
           importance: Importance.max,
+          priority: Priority.high,
           playSound: true,
           icon: android?.smallIcon, // Optional icon to use.
-        ),
-        iOS: DarwinNotificationDetails(
-          sound: apple?.sound?.name,
-          presentSound: true,
-          presentBadge: true,
-          presentAlert: true,
         ),
       ),
       payload: jsonEncode(message.toMap()),
@@ -99,11 +93,11 @@ class NotificationServices {
   static String findChannelName(String channelId) {
     switch (channelId) {
       case 'high_importance_channel':
-        return NotificationChennels.highInportanceChannel.name;
+        return NotificationChannels.highInportanceChannel.name;
       case 'low_importance_channel':
-        return NotificationChennels.lowInportanceChannel.name;
+        return NotificationChannels.lowInportanceChannel.name;
       default:
-        return NotificationChennels.highInportanceChannel.name;
+        return NotificationChannels.highInportanceChannel.name;
     }
   }
 }

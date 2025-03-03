@@ -19,6 +19,7 @@ class Constants {
   static const String groupSettingsScreen = '/groupSettingsScreen';
   static const String groupInformationScreen = '/groupInformationScreen';
   static const String callScreen = '/callScreen';
+  static const String incomingCallScreen = '/incomingCallScreen';
 
   static const String uid = 'uid';
   static const String name = 'name';

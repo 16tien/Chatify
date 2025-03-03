@@ -1,14 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/main_screen/call_screen.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../main_screen/call_screen.dart';
 
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
@@ -36,10 +36,10 @@ class _ChatAppBarState extends State<ChatAppBar> {
         }
 
         final userModel =
-        UserModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
+            UserModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
 
         DateTime lastSeen =
-        DateTime.fromMillisecondsSinceEpoch(int.parse(userModel.lastSeen));
+            DateTime.fromMillisecondsSinceEpoch(int.parse(userModel.lastSeen));
 
         return Row(
           children: [
@@ -47,9 +47,12 @@ class _ChatAppBarState extends State<ChatAppBar> {
               imageUrl: userModel.image,
               radius: 20,
               onTap: () {
-                // Navigate to this friend's profile with UID as argument
-                Navigator.pushNamed(context, Constants.profileScreen,
-                    arguments: userModel.uid);
+                // Chuyển đến màn hình hồ sơ của bạn bè với UID làm tham số
+                Navigator.pushNamed(
+                  context,
+                  Constants.profileScreen,
+                  arguments: userModel.uid,
+                );
               },
             ),
             const SizedBox(width: 10),
@@ -58,9 +61,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
               children: [
                 Text(
                   userModel.name,
-                  style: GoogleFonts.openSans(
-                    fontSize: 16,
-                  ),
+                  style: GoogleFonts.openSans(fontSize: 16),
                 ),
                 Text(
                   userModel.isOnline
@@ -76,12 +77,33 @@ class _ChatAppBarState extends State<ChatAppBar> {
               ],
             ),
             const Spacer(),
-            // Thêm nút gọi ở đây
+            // Nút gọi điện
             IconButton(
-              icon: Icon(Icons.call),
-              onPressed: () {
-                // Xử lý gọi điện khi nhấn nút
-                _startCall(userModel);
+              icon: const Icon(Icons.call),
+              onPressed: () async {
+                final authProvider = context.read<AuthenticationProvider>();
+                final String? callerID = authProvider.uid; // ID của người gọi
+                final String name = authProvider.userModel!.name;
+                final String receiverID = userModel.uid; // ID người nhận
+                final String callID =
+                    "$callerID$receiverID"; // Mã phòng duy nhất
+                authProvider.sendCallRequest(receiverID);
+                // Lưu thông tin cuộc gọi lên Firestore
+                FirebaseFirestore.instance.collection('calls').doc(callID).set({
+                  'callerID': callerID,
+                  'receiverID': receiverID,
+                  'timestamp': FieldValue.serverTimestamp(),
+                  'status': 'ringing', // Trạng thái cuộc gọi đang đổ chuông
+                });
+
+                // Điều hướng đến màn hình chờ cuộc gọi
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CallScreen(
+                        callID: callerID!+receiverID, userID: callID, userName: name),
+                  ),
+                );
               },
             ),
           ],
@@ -89,22 +111,4 @@ class _ChatAppBarState extends State<ChatAppBar> {
       },
     );
   }
-
-  // Hàm để xử lý cuộc gọi
-  void _startCall(UserModel user) {
-    final String currentUserId = context.read<AuthenticationProvider>().uid.toString();
-    final String callId = "${currentUserId}_${user.uid}"; // Tạo mã phòng duy nhất
-
-
-  }
-
-
-// Ví dụ: Dùng `url_launcher` để gọi điện
-// Future<void> _makePhoneCall(String phoneNumber) async {
-//   final Uri launchUri = Uri(
-//     scheme: 'tel',
-//     path: phoneNumber,
-//   );
-//   await launch(launchUri.toString());
-// }
 }

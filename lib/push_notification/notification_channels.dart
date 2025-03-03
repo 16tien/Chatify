@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-class NotificationChennels {
+class NotificationChannels {
   // high importance channel
   static const AndroidNotificationChannel highInportanceChannel =
   AndroidNotificationChannel(

@@ -74,7 +74,7 @@ dependencies:
   googleapis_auth: ^1.6.0
   zego_uikit_prebuilt_call: ^4.16.23
   zego_uikit_prebuilt_video_conference: ^2.9.9
-
+  firebase_analytics: ^11.4.4
 
 dev_dependencies:
   flutter_test:

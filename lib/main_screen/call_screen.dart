@@ -2,34 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class CallScreen extends StatelessWidget {
+  final String callID;
   final String userID;
   final String userName;
-  final String calleeID;
 
   const CallScreen({
     super.key,
+    required this.callID,
     required this.userID,
-    required this.userName,
-    required this.calleeID,
+    required this.userName
   });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Zego Call")),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            // ZegoUIKitPrebuiltCallInvitationService().sendCallInvitation(
-            //   inviterID: userID,
-            //   inviterName: userName,
-            //   invitees: [calleeID], // ID của B
-            //   callType: ZegoCallType.videoCall,
-            // );
-          },
-          child: const Text("Gọi Video"),
-        ),
+    return SafeArea(
+      child: ZegoUIKitPrebuiltCall(
+        appID: 1966915086, // Thay bằng AppID của bạn từ ZegoCloud
+        appSign: 'f2b84d4461357142a31adb0ba14084324ebaa9d445f18994d20b4f338730a5ac',
+        callID:'KsrYrHiFdJOiMX51ORbE0dKb3CQ2TCGb5Huh1xaSJSoyCAXXGJrB1LE',
+        userID: userID,
+        userName: userName,
+        config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+
+        ,
       ),
     );
   }
+
 }

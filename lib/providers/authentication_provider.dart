@@ -754,21 +754,18 @@ class AuthenticationProvider extends ChangeNotifier {
       print("Failed to send notification: ${response.body}");
     }
   }
-  Future<void> sendCallRequest(String senderId, String receiverId) async {
+  Future<void> sendCallRequest(String receiverId) async {
+    _uid = _auth.currentUser!.uid;
     String bearerToken =
     await getBearerToken(); // Lấy Bearer Token từ Service Account
-    String? token = await getTokenByUID(senderId);
+    String? token = await getTokenByUID(receiverId);
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
     "data": {
     "type": "call",
-    "callerId": receiverId, // ID người gọi
+    "callerId": _uid, // ID người gọi
     },
-    "notification": {
-    "title": "Cuộc gọi đến",
-    "body": "Bạn có cuộc gọi mới!",
-    }
     }};
 
     final response = await http.post(
@@ -859,5 +856,20 @@ class AuthenticationProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners(); // Cập nhật lại UI
     }
+  }
+  Future<Map<String, String>?> getUserNameAndImage(String uid) async {
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection("users").doc(uid).get();
+
+      if (userDoc.exists) {
+        String name = userDoc["name"] ?? "Người dùng";
+        String imageUrl = userDoc["image"] ?? "";
+
+        return {"name": name, "image": imageUrl};
+      }
+    } catch (e) {
+      print("Lỗi khi lấy dữ liệu người dùng: $e");
+    }
+    return null;
   }
 }
