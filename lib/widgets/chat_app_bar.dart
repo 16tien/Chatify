@@ -9,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
 
@@ -101,7 +100,9 @@ class _ChatAppBarState extends State<ChatAppBar> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CallScreen(
-                        callID: callerID!+receiverID, userID: callID, userName: name),
+                        callID: callerID! + receiverID,
+                        userID: callID,
+                        userName: name),
                   ),
                 );
               },

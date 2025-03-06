@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/widgets/friend_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class AllPeopleSearchStream extends StatelessWidget {
   const AllPeopleSearchStream({
@@ -19,7 +19,7 @@ class AllPeopleSearchStream extends StatelessWidget {
   Widget build(BuildContext context) {
     // stream the last message collection
     final stream =
-    FirebaseFirestore.instance.collection(Constants.users).snapshots();
+        FirebaseFirestore.instance.collection(Constants.users).snapshots();
     return StreamBuilder<QuerySnapshot>(
         stream: stream,
         builder: (builderContext, snapshot) {
@@ -36,14 +36,14 @@ class AllPeopleSearchStream extends StatelessWidget {
 
           final results = snapshot.data!.docs
               .where((element) => element[Constants.name]
-              .toString()
-              .toLowerCase()
-              .contains(searchText.toLowerCase()))
+                  .toString()
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()))
               .toList();
 
           if (results.isEmpty) {
             return const Center(
-              child: Text('No chats found'),
+              child: Text('Không tìm thấy'),
             );
           }
 

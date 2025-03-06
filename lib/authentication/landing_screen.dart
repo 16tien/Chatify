@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/utilities/assets_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -17,21 +17,23 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
-    checkAthentication();
+    checkAuthentication();
     super.initState();
   }
 
-  void checkAthentication() async {
+  void checkAuthentication() async {
     try {
       final authProvider = context.read<AuthenticationProvider>();
       bool isAuthenticated = await authProvider.checkAuthenticationState();
 
-      // Điều hướng sau khi xác định trạng thái xác thực
-      navigate(isAuthenticated: isAuthenticated);
+      if (mounted) {
+        navigate(isAuthenticated: isAuthenticated);
+      }
     } catch (e) {
       log('Lỗi khi kiểm tra xác thực: $e');
-      // Có thể điều hướng đến màn hình đăng nhập nếu gặp lỗi
-      Navigator.pushReplacementNamed(context, Constants.loginScreen);
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, Constants.loginScreen);
+      }
     }
   }
 
@@ -47,15 +49,13 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SizedBox(
-          height: 400,
-          width: 200,
-          child: Column(
-            children: [
-              Lottie.asset(AssetsManager.chatBubble),
-              const LinearProgressIndicator(),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(AssetsManager.chatBubble),
+            const SizedBox(height: 20),
+            const CircularProgressIndicator(),
+          ],
         ),
       ),
     );

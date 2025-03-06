@@ -88,12 +88,12 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
               onPressed: widget.viewOnly
                   ? null
                   : () async {
-                if (!isPlaying) {
-                  await audioPlayer.play(UrlSource(widget.audioUrl));
-                } else {
-                  await audioPlayer.pause();
-                }
-              },
+                      if (!isPlaying) {
+                        await audioPlayer.play(UrlSource(widget.audioUrl));
+                      } else {
+                        await audioPlayer.pause();
+                      }
+                    },
               icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
                   color: Colors.black),
             ),

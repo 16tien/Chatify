@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+
 import '../utilities/assets_manager.dart';
 import 'register_screen.dart'; // Import màn hình đăng ký
 
@@ -32,7 +33,8 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,8 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Lottie.asset(AssetsManager.chatBubble),
                 ),
                 Text(
-                  "Flutter Chat",
-                  style: GoogleFonts.openSans(fontSize: 28, fontWeight: FontWeight.w500),
+                  "CHATIFY",
+                  style: GoogleFonts.openSans(
+                      fontSize: 28, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -52,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: GoogleFonts.openSans(fontSize: 20),
                 ),
                 const SizedBox(height: 20),
-        
+
                 // Input Email
                 TextFormField(
                   controller: _emailController,
@@ -67,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 15),
-        
+
                 // Input Password
                 TextFormField(
                   controller: _passwordController,
@@ -82,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-        
+
                 // Nút đăng nhập và đăng ký trên cùng một hàng
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -91,29 +94,53 @@ class _LoginScreenState extends State<LoginScreen> {
                     authProvider.isLoading
                         ? const CircularProgressIndicator()
                         : ElevatedButton(
-                      onPressed: () {
-                        authProvider.signInWithEmailAndPassword(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim(),
-                          context: context,
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                      ),
-                      child: const Text(  "Đăng nhập"),
-                    ),
-        
+                            onPressed: () {
+                              String email = _emailController.text.trim();
+                              String password = _passwordController.text.trim();
+
+                              if (email.isEmpty || !email.contains('@')) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text('Vui lòng nhập email hợp lệ!')),
+                                );
+                                return;
+                              }
+
+                              if (password.isEmpty || password.length < 6) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Mật khẩu phải có ít nhất 6 ký tự!')),
+                                );
+                                return;
+                              }
+
+                              authProvider.signInWithEmailAndPassword(
+                                email: email,
+                                password: password,
+                                context: context,
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
+                            ),
+                            child: const Text("Đăng nhập"),
+                          ),
+
                     // Nút Đăng ký
                     OutlinedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const RegisterScreen()),
                         );
                       },
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 15),
                       ),
                       child: const Text("Đăng ký"),
                     ),

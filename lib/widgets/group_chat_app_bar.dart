@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:chat_app/widgets/group_members.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GroupChatAppBar extends StatefulWidget {
@@ -21,7 +21,7 @@ class _GroupChatAppBarState extends State<GroupChatAppBar> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream:
-      context.read<GroupProvider>().groupStream(groupId: widget.groupId),
+          context.read<GroupProvider>().groupStream(groupId: widget.groupId),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
           return const Center(child: Text('Something went wrong'));
@@ -32,7 +32,7 @@ class _GroupChatAppBarState extends State<GroupChatAppBar> {
         }
 
         final groupModel =
-        GroupModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
+            GroupModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
 
         return GestureDetector(
           onTap: () {

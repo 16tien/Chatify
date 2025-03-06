@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/main_screen/friend_requests_screen.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -26,21 +26,21 @@ class GroupStatusWidget extends StatelessWidget {
           onTap: !isAdmin
               ? null
               : () {
-            // show dialog to change group type
-            showMyAnimatedDialog(
-              context: context,
-              title: 'Change Group Type',
-              content:
-              'Are you sure you want to change the group type to ${groupProvider.groupModel.isPrivate ? 'Public' : 'Private'}?',
-              textAction: 'Change',
-              onActionTap: (value, updatedText) {
-                if (value) {
-                  // change group type
-                  groupProvider.changeGroupType();
-                }
-              },
-            );
-          },
+                  // show dialog to change group type
+                  showMyAnimatedDialog(
+                    context: context,
+                    title: 'Change Group Type',
+                    content:
+                        'Are you sure you want to change the group type to ${groupProvider.groupModel.isPrivate ? 'Public' : 'Private'}?',
+                    textAction: 'Change',
+                    onActionTap: (value, updatedText) {
+                      if (value) {
+                        // change group type
+                        groupProvider.changeGroupType();
+                      }
+                    },
+                  );
+                },
           child: Container(
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
@@ -78,21 +78,20 @@ class ProfileStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
- Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FriendsButton(
-            currentUser: currentUser,
-            userModel: userModel,
-          ),
-          const SizedBox(width: 10),
-          FriendRequestButton(
-            currentUser: currentUser,
-            userModel: userModel,
-          ),
-        ],
-      );
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FriendsButton(
+          currentUser: currentUser,
+          userModel: userModel,
+        ),
+        const SizedBox(width: 10),
+        FriendRequestButton(
+          currentUser: currentUser,
+          userModel: userModel,
+        ),
+      ],
+    );
   }
 }
 
@@ -195,7 +194,8 @@ class FriendsButton extends StatelessWidget {
                                   .read<AuthenticationProvider>()
                                   .removeFriend(friendID: userModel.uid)
                                   .whenComplete(() {
-                                showSnackBar(context, 'You are no longer friends');
+                                showSnackBar(
+                                    context, 'You are no longer friends');
                               });
                             },
                             child: const Text('Yes'),
@@ -205,7 +205,8 @@ class FriendsButton extends StatelessWidget {
                     );
                   },
                   label: 'Unfriend',
-                  width: MediaQuery.of(context).size.width * 0.3, // Giảm width cho nút Unfriend
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  // Giảm width cho nút Unfriend
                   backgroundColor: Colors.deepPurple,
                   textColor: Colors.white,
                 ),
@@ -213,19 +214,20 @@ class FriendsButton extends StatelessWidget {
                 MyElevatedButton(
                   onPressed: () async {
                     // navigate to chat screen
-                    Navigator.pushNamed(context, Constants.chatScreen, arguments: {
-                      Constants.contactUID: userModel.uid,
-                      Constants.contactName: userModel.name,
-                      Constants.contactImage: userModel.image,
-                      Constants.groupId: ''
-                    });
+                    Navigator.pushNamed(context, Constants.chatScreen,
+                        arguments: {
+                          Constants.contactUID: userModel.uid,
+                          Constants.contactName: userModel.name,
+                          Constants.contactImage: userModel.image,
+                          Constants.groupId: ''
+                        });
                   },
                   label: 'Chat',
-                  width: MediaQuery.of(context).size.width * 0.3, // Giảm width cho nút Chat
+                  width: MediaQuery.of(context).size.width * 0.3,
+                  // Giảm width cho nút Chat
                   backgroundColor: Theme.of(context).cardColor,
                   textColor: Theme.of(context).colorScheme.primary,
                 ),
-
               ],
             );
           } else {
@@ -234,8 +236,7 @@ class FriendsButton extends StatelessWidget {
                 await context
                     .read<AuthenticationProvider>()
                     .sendFriendRequest(friendID: userModel.uid)
-                    .whenComplete(() {
-                });
+                    .whenComplete(() {});
               },
               label: 'Send Request',
               width: MediaQuery.of(context).size.width * 0.7,

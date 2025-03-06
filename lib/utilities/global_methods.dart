@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:date_format/date_format.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/assets_manager.dart';
 import 'package:chat_app/widgets/friends_list.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -18,10 +19,10 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void showSnackBar(BuildContext context, String message) {
   if (ScaffoldMessenger.of(context).mounted) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
-
 
 Widget userImageWidget({
   required String imageUrl,
@@ -48,8 +49,8 @@ getImageToShow({
   return fileImage != null
       ? FileImage(File(fileImage.path)) as ImageProvider
       : imageUrl.isNotEmpty
-      ? CachedNetworkImageProvider(imageUrl)
-      : const AssetImage(AssetsManager.userImage);
+          ? CachedNetworkImageProvider(imageUrl)
+          : const AssetImage(AssetsManager.userImage);
 }
 
 // picp image from gallery or camera
@@ -62,7 +63,7 @@ Future<File?> pickImage({
     // get picture from camera
     try {
       final pickedFile =
-      await ImagePicker().pickImage(source: ImageSource.camera);
+          await ImagePicker().pickImage(source: ImageSource.camera);
       if (pickedFile == null) {
         onFail('No image selected');
       } else {
@@ -75,7 +76,7 @@ Future<File?> pickImage({
     // get picture from gallery
     try {
       final pickedFile =
-      await ImagePicker().pickImage(source: ImageSource.gallery);
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile == null) {
         onFail('No image selected');
       } else {
@@ -96,7 +97,7 @@ Future<File?> pickVideo({
   File? fileVideo;
   try {
     final pickedFile =
-    await ImagePicker().pickVideo(source: ImageSource.gallery);
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (pickedFile == null) {
       onFail('No video selected');
     } else {
@@ -190,20 +191,24 @@ Future<String> storeFileToCloudinary({
 
     // Kiểm tra loại tệp (image/video) dựa trên phần mở rộng
     String fileExtension = file.path.split('.').last.toLowerCase();
-    String resourceType = (fileExtension == 'mp4' || fileExtension == 'mov' || fileExtension == 'avi' || fileExtension == 'webm')
+    String resourceType = (fileExtension == 'mp4' ||
+            fileExtension == 'mov' ||
+            fileExtension == 'avi' ||
+            fileExtension == 'webm')
         ? 'video' // Nếu là video
         : 'image'; // Nếu là hình ảnh
 
     // URL API của Cloudinary
-    final Uri uploadUrl =
-    Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/$resourceType/upload');
+    final Uri uploadUrl = Uri.parse(
+        'https://api.cloudinary.com/v1_1/$cloudName/$resourceType/upload');
 
     // Chuẩn bị request multipart để upload
     var request = http.MultipartRequest('POST', uploadUrl);
 
     // Các thông tin cần thiết
     request.fields['upload_preset'] = 'ml_default';
-    request.fields['folder'] = 'user_files'; // Thư mục lưu trữ (có thể thay đổi)
+    request.fields['folder'] =
+        'user_files'; // Thư mục lưu trữ (có thể thay đổi)
 
     // Thêm tệp vào request
     request.files.add(await http.MultipartFile.fromPath(
@@ -230,7 +235,6 @@ Future<String> storeFileToCloudinary({
     throw Exception('Error uploading to Cloudinary: $e');
   }
 }
-
 
 // animated dialog
 void showMyAnimatedDialog({
@@ -263,21 +267,21 @@ void showMyAnimatedDialog({
               ),
               content: editable
                   ? TextField(
-                controller: controller,
-                maxLength: content == Constants.changeName ? 20 : 500,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  hintText: hintText,
-                  counterText: '',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              )
+                      controller: controller,
+                      maxLength: content == Constants.changeName ? 20 : 500,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        hintText: hintText,
+                        counterText: '',
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    )
                   : Text(
-                content,
-                textAlign: TextAlign.center,
-              ),
+                      content,
+                      textAlign: TextAlign.center,
+                    ),
               actions: [
                 TextButton(
                   onPressed: () {

@@ -17,7 +17,7 @@ class GroupModel {
   bool editSettings;
   bool approveMembers;
   bool lockMessages;
-  bool requestToJoing;
+  bool requestToJoin;
   List<String> membersUIDs;
   List<String> adminsUIDs;
   List<String> awaitingApprovalUIDs;
@@ -38,7 +38,7 @@ class GroupModel {
     required this.editSettings,
     required this.approveMembers,
     required this.lockMessages,
-    required this.requestToJoing,
+    required this.requestToJoin,
     required this.membersUIDs,
     required this.adminsUIDs,
     required this.awaitingApprovalUIDs,
@@ -62,7 +62,7 @@ class GroupModel {
       Constants.editSettings: editSettings,
       Constants.approveMembers: approveMembers,
       Constants.lockMessages: lockMessages,
-      Constants.requestToJoing: requestToJoing,
+      Constants.requestToJoin: requestToJoin,
       Constants.membersUIDs: membersUIDs,
       Constants.adminsUIDs: adminsUIDs,
       Constants.awaitingApprovalUIDs: awaitingApprovalUIDs,
@@ -89,11 +89,11 @@ class GroupModel {
       editSettings: map[Constants.editSettings] ?? false,
       approveMembers: map[Constants.approveMembers] ?? false,
       lockMessages: map[Constants.lockMessages] ?? false,
-      requestToJoing: map[Constants.requestToJoing] ?? false,
+      requestToJoin: map[Constants.requestToJoin] ?? false,
       membersUIDs: List<String>.from(map[Constants.membersUIDs] ?? []),
       adminsUIDs: List<String>.from(map[Constants.adminsUIDs] ?? []),
       awaitingApprovalUIDs:
-      List<String>.from(map[Constants.awaitingApprovalUIDs] ?? []),
+          List<String>.from(map[Constants.awaitingApprovalUIDs] ?? []),
     );
   }
 }

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/widgets/swipe_to_widget.dart';
+import 'package:flutter/material.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({

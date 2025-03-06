@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/last_message_model.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/widgets/chat_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatsStream extends StatelessWidget {

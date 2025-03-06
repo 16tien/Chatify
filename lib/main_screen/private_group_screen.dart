@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/widgets/chat_widget.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PrivateGroupScreen extends StatefulWidget {
@@ -85,20 +85,20 @@ class MyPrivateGroups extends StatelessWidget {
           return const Center(child: Text('Something went wrong'));
         }
         if (snapshot.data!.isEmpty) {
-          return const Center(child: Text('No private groups'));
+          return const Center(child: Text('Không có nhóm riêng tư'));
         }
 
         final groups = snapshot.data!;
         final filteredGroups = searchQuery.isEmpty
             ? groups
             : groups
-            .where((group) => group.groupName
-            .toLowerCase()
-            .contains(searchQuery.toLowerCase()))
-            .toList();
+                .where((group) => group.groupName
+                    .toLowerCase()
+                    .contains(searchQuery.toLowerCase()))
+                .toList();
 
         if (filteredGroups.isEmpty) {
-          return const Center(child: Text('No group found'));
+          return const Center(child: Text('Không tìm thấy nhóm'));
         }
 
         return ListView.builder(

@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/last_message_model.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/widgets/chat_widget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchStream extends StatelessWidget {
@@ -21,7 +21,7 @@ class SearchStream extends StatelessWidget {
     return Consumer<ChatProvider>(builder: ((context, chatProvider, child) {
       return StreamBuilder<QuerySnapshot>(
           stream:
-          chatProvider.getLastMessageStream(userId: uid, groupId: groupId),
+              chatProvider.getLastMessageStream(userId: uid, groupId: groupId),
           builder: (builderContext, snapshot) {
             if (snapshot.hasError) {
               return const Center(

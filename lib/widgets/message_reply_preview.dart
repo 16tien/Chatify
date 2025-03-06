@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/models/message_reply_model.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:chat_app/widgets/display_message_type.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -76,7 +76,7 @@ class MessageReplyPreview extends StatelessWidget {
       child: Container(
           decoration: BoxDecoration(
             color:
-            Theme.of(context).textTheme.titleLarge!.color!.withOpacity(0.1),
+                Theme.of(context).textTheme.titleLarge!.color!.withOpacity(0.1),
             borderRadius: BorderRadius.circular(25),
             border: Border.all(
               color: Theme.of(context).textTheme.titleLarge!.color!,
@@ -96,18 +96,18 @@ class MessageReplyPreview extends StatelessWidget {
         const SizedBox(height: 5),
         replyMessageModel != null
             ? messageToShow(
-          type: type,
-          message: replyMessageModel!.message,
-        )
+                type: type,
+                message: replyMessageModel!.message,
+              )
             : DisplayMessageType(
-          message: message!.repliedMessage,
-          type: message!.repliedMessageType,
-          color: Colors.white,
-          isReply: true,
-          maxLines: 1,
-          overFlow: TextOverflow.ellipsis,
-          viewOnly: viewOnly,
-        ),
+                message: message!.repliedMessage,
+                type: message!.repliedMessageType,
+                color: Colors.white,
+                isReply: true,
+                maxLines: 1,
+                overFlow: TextOverflow.ellipsis,
+                viewOnly: viewOnly,
+              ),
       ],
     );
   }

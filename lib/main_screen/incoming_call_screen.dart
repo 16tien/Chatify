@@ -1,4 +1,5 @@
-import 'package:chat_app/models/user_model.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,73 +18,92 @@ class IncomingCallScreen extends StatefulWidget {
 class _IncomingCallScreenState extends State<IncomingCallScreen> {
   String callerName = "Đang tải...";
   String callerImage = "";
-  late String callID;
+  String callID = "";
+  StreamSubscription? _callSubscription;
 
   @override
   void initState() {
     super.initState();
-    _listenForIncomingCalls();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _listenForIncomingCalls();
+    });
+  }
+
+  @override
+  void dispose() {
+    _callSubscription?.cancel();
+    super.dispose();
   }
 
   void _listenForIncomingCalls() {
-    String currentId = context.read<AuthenticationProvider>().userModel!.uid;
+    final currentId = context.read<AuthenticationProvider>().userModel?.uid;
 
-    FirebaseFirestore.instance
+    if (currentId == null) return;
+
+    _callSubscription = FirebaseFirestore.instance
         .collection('calls')
         .where('receiverID', isEqualTo: currentId)
-        .where('status',
-            isEqualTo: 'ringing') // Chỉ lấy cuộc gọi đang đổ chuông
+        .where('status', isEqualTo: 'ringing')
         .snapshots()
-        .listen((snapshot) {
+        .listen((snapshot) async {
       if (snapshot.docs.isNotEmpty) {
         var callData = snapshot.docs.first.data();
-        String callerID = callData['callerID'] ?? ''; // Lấy ID của người gọi
+        String callerID = callData['callerID'] ?? '';
 
         if (callerID.isNotEmpty) {
-          // Lấy thông tin người gọi từ collection 'users'
-          FirebaseFirestore.instance
+          var userDoc = await FirebaseFirestore.instance
               .collection('users')
               .doc(callerID)
-              .get()
-              .then((userDoc) {
-            if (userDoc.exists) {
-              var userData = userDoc.data();
+              .get();
 
-              if (!mounted)return; // Kiểm tra widget còn tồn tại trước khi cập nhật state
+          if (userDoc.exists) {
+            var userData = userDoc.data();
 
-              setState(() {
-                callID = callData['callerID'] + callData['receiverID'];
-                callerName = userData?['name'] ??
-                    'Người gọi không xác định'; // Tên người gọi
-                callerImage = userData?['image'] ?? ''; // Ảnh người gọi
-              });
-            }
-          });
+            if (!mounted) return; // Kiểm tra widget còn tồn tại trước khi cập nhật state
+
+            setState(() {
+              callID = "${callData['callerID']}_${callData['receiverID']}";
+              callerName = userData?['name'] ?? 'Người gọi không xác định';
+              callerImage = userData?['image'] ?? '';
+            });
+          }
         }
+      } else {
+        if (!mounted) return;
+        setState(() {
+          callerName = "Không có cuộc gọi";
+          callerImage = "";
+          callID = "";
+        });
       }
     });
   }
 
   void _acceptCall() async {
+    if (callID.isEmpty) return;
+
     await FirebaseFirestore.instance.collection('calls').doc(callID).update({
       'status': 'accepted',
     });
-    String currentId = context.read<AuthenticationProvider>().userModel!.uid;
-    String userName =  context.read<AuthenticationProvider>().userModel!.name;
-    // Điều hướng đến màn hình gọi video (CallScreen)
+
+    final currentUser = context.read<AuthenticationProvider>().userModel;
+    if (currentUser == null) return;
+
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => CallScreen(
           callID: callID,
-          userID: currentId,
-          userName: userName,
+          userID: currentUser.uid,
+          userName: currentUser.name,
         ),
       ),
     );
   }
 
   void _declineCall() async {
+    if (callID.isEmpty) return;
+
     await FirebaseFirestore.instance.collection('calls').doc(callID).update({
       'status': 'declined',
     });
@@ -101,12 +121,12 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
           CircleAvatar(
             radius: 60,
             backgroundImage:
-                getImageToShow(imageUrl: callerImage, fileImage: null),
+            getImageToShow(imageUrl: callerImage, fileImage: null),
           ),
           const SizedBox(height: 16),
           Text(
             "Cuộc gọi từ: $callerName",
-            style: TextStyle(
+            style: const TextStyle(
                 color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 32),

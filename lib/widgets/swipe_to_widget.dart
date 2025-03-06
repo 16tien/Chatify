@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/widgets/align_message_left_widget.dart';
 import 'package:chat_app/widgets/align_message_right_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 class SwipeToWidget extends StatelessWidget {
@@ -26,12 +26,12 @@ class SwipeToWidget extends StatelessWidget {
         },
         child: isMe
             ? AlignMessageRightWidget(
-          message: message,
-          isGroupChat: isGroupChat,
-        )
+                message: message,
+                isGroupChat: isGroupChat,
+              )
             : AlignMessageLeftWidget(
-          message: message,
-          isGroupChat: isGroupChat,
-        ));
+                message: message,
+                isGroupChat: isGroupChat,
+              ));
   }
 }

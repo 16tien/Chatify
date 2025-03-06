@@ -1,12 +1,10 @@
-
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
-import 'package:chat_app/widgets/my_app_bar.dart';
 import 'package:chat_app/widgets/display_user_image.dart';
-
+import 'package:chat_app/widgets/my_app_bar.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserInformationScreen extends StatefulWidget {
@@ -17,13 +15,10 @@ class UserInformationScreen extends StatefulWidget {
 }
 
 class _UserInformationScreenState extends State<UserInformationScreen> {
-  // final RoundedLoadingButtonController _btnController =
-  //     RoundedLoadingButtonController();
   final TextEditingController _nameController = TextEditingController();
 
   @override
   void dispose() {
-    //_btnController.stop();
     _nameController.dispose();
     super.dispose();
   }
@@ -31,79 +26,79 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
   @override
   Widget build(BuildContext context) {
     final AuthenticationProvider authentication =
-    context.watch<AuthenticationProvider>();
+        context.watch<AuthenticationProvider>();
     return Scaffold(
       appBar: MyAppBar(
-        title: const Text('User Information'),
+        title: const Text('Thông tin cá nhân'),
         onPressed: () => Navigator.of(context).pop(),
       ),
       body: Center(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 20.0,
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 20.0,
+        ),
+        child: Column(
+          children: [
+            DisplayUserImage(
+              finalFileImage: authentication.finalFileImage,
+              radius: 60,
+              onPressed: () {
+                authentication.showBottomSheet(
+                    context: context, onSuccess: () {});
+              },
             ),
-            child: Column(
-              children: [
-                DisplayUserImage(
-                  finalFileImage: authentication.finalFileImage,
-                  radius: 60,
-                  onPressed: () {
-                    authentication.showBottomSheet(
-                        context: context, onSuccess: () {});
-                  },
+            const SizedBox(height: 30),
+            TextField(
+              controller: _nameController,
+              maxLength: 20,
+              decoration: const InputDecoration(
+                hintText: 'Nhập tên của bạn',
+                labelText: 'Nhập tên của bạn',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8),
+                  ),
                 ),
-                const SizedBox(height: 30),
-                TextField(
-                  controller: _nameController,
-                  maxLength: 20,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your name',
-                    labelText: 'Enter your name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(8),
+              ),
+            ),
+            const SizedBox(height: 40),
+            Container(
+              width: double.infinity,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: MaterialButton(
+                onPressed: context.read<AuthenticationProvider>().isLoading
+                    ? null
+                    : () {
+                        if (_nameController.text.isEmpty ||
+                            _nameController.text.length < 3) {
+                          showSnackBar(context, 'Vui lòng nhập tên của bạn');
+                          return;
+                        }
+                        // save user data to firestore
+                        saveUserDataToFireStore();
+                      },
+                child: context.watch<AuthenticationProvider>().isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.orangeAccent,
+                      )
+                    : const Text(
+                        'Tiếp tục',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.5),
                       ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: MaterialButton(
-                    onPressed: context.read<AuthenticationProvider>().isLoading
-                        ? null
-                        : () {
-                      if (_nameController.text.isEmpty ||
-                          _nameController.text.length < 3) {
-                        showSnackBar(context, 'Please enter your name');
-                        return;
-                      }
-                      // save user data to firestore
-                      saveUserDataToFireStore();
-                    },
-                    child: context.watch<AuthenticationProvider>().isLoading
-                        ? const CircularProgressIndicator(
-                      color: Colors.orangeAccent,
-                    )
-                        : const Text(
-                      'Continue',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.5),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          )),
+          ],
+        ),
+      )),
     );
   }
 
@@ -144,7 +139,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
     // navigate to home screen and remove all previous screens
     Navigator.of(context).pushNamedAndRemoveUntil(
       Constants.homeScreen,
-          (route) => false,
+      (route) => false,
     );
   }
 }

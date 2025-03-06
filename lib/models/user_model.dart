@@ -43,9 +43,9 @@ class UserModel {
       isOnline: map[Constants.isOnline] ?? false,
       friendsUIDs: List<String>.from(map[Constants.friendsUIDs] ?? []),
       friendRequestsUIDs:
-      List<String>.from(map[Constants.friendRequestsUIDs] ?? []),
+          List<String>.from(map[Constants.friendRequestsUIDs] ?? []),
       sentFriendRequestsUIDs:
-      List<String>.from(map[Constants.sentFriendRequestsUIDs] ?? []),
+          List<String>.from(map[Constants.sentFriendRequestsUIDs] ?? []),
     );
   }
 

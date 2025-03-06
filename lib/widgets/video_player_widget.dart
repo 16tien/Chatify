@@ -1,4 +1,3 @@
-
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -25,21 +24,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   void initState() {
-    videoPlayerController = CachedVideoPlayerPlusController.network(widget.videoUrl)
-      ..addListener(() {
-        // Cập nhật trạng thái khi video thay đổi
-        if (videoPlayerController.value.isPlaying != isPlaying) {
-          setState(() {
-            isPlaying = videoPlayerController.value.isPlaying;
+    videoPlayerController =
+        CachedVideoPlayerPlusController.network(widget.videoUrl)
+          ..addListener(() {
+            if (videoPlayerController.value.isPlaying != isPlaying) {
+              setState(() {
+                isPlaying = videoPlayerController.value.isPlaying;
+              });
+            }
+          })
+          ..initialize().then((_) {
+            videoPlayerController.setVolume(1);
+            setState(() {
+              isLoading = false;
+            });
           });
-        }
-      })
-      ..initialize().then((_) {
-        videoPlayerController.setVolume(1);
-        setState(() {
-          isLoading = false;
-        });
-      });
     super.initState();
   }
 
@@ -52,7 +51,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9,  // Điều chỉnh tỷ lệ khung hình
+      aspectRatio: 16 / 9, // Điều chỉnh tỷ lệ khung hình
       child: Stack(
         children: [
           isLoading
@@ -67,15 +66,15 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               onPressed: widget.viewOnly
                   ? null
                   : () {
-                setState(() {
-                  isPlaying = !isPlaying;
-                  if (isPlaying) {
-                    videoPlayerController.play();
-                  } else {
-                    videoPlayerController.pause();
-                  }
-                });
-              },
+                      setState(() {
+                        isPlaying = !isPlaying;
+                        if (isPlaying) {
+                          videoPlayerController.play();
+                        } else {
+                          videoPlayerController.pause();
+                        }
+                      });
+                    },
             ),
           ),
         ],

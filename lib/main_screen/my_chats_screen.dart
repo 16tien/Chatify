@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/streams/chats_stream.dart';
 import 'package:chat_app/streams/search_stream.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MyChatsScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _MyChatsScreenState extends State<MyChatsScreen> {
                   right: 8.0,
                 ),
                 child: CupertinoSearchTextField(
-                  placeholder: 'Search',
+                  placeholder: 'Tìm bạn bè',
                   style: TextStyle(
                     color: Theme.of(context).textTheme.bodyMedium!.color,
                   ),

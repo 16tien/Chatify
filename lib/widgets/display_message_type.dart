@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/widgets/audio_player_widget.dart';
 import 'package:chat_app/widgets/video_player_widget.dart';
+import 'package:flutter/material.dart';
 
 class DisplayMessageType extends StatelessWidget {
   const DisplayMessageType({
@@ -42,28 +42,29 @@ class DisplayMessageType extends StatelessWidget {
           return isReply
               ? const Icon(Icons.image)
               : CachedNetworkImage(
-            width: 200,
-            height: 200,
-            imageUrl: message,
-            fit: BoxFit.cover,
-          );
+                  width: 200,
+                  height: 200,
+                  imageUrl: message,
+                  fit: BoxFit.cover,
+                );
         case MessageEnum.video:
           return isReply
               ? const Icon(Icons.video_collection)
               : VideoPlayerWidget(
-            videoUrl: message,    // Đường dẫn video
-            color: color,         // Màu sắc cho icon play/pause
-            viewOnly: viewOnly,   // Trạng thái chỉ xem hoặc có thể điều khiển video
-          );
+                  videoUrl: message, // Đường dẫn video
+                  color: color, // Màu sắc cho icon play/pause
+                  viewOnly:
+                      viewOnly, // Trạng thái chỉ xem hoặc có thể điều khiển video
+                );
 
         case MessageEnum.audio:
           return isReply
               ? const Icon(Icons.audiotrack)
               : AudioPlayerWidget(
-            audioUrl: message,
-            color: color,
-            viewOnly: viewOnly,
-          );
+                  audioUrl: message,
+                  color: color,
+                  viewOnly: viewOnly,
+                );
         default:
           return Text(
             message,

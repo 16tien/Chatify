@@ -79,7 +79,7 @@ class Constants {
   static const String editSettings = 'editSettings';
   static const String approveMembers = 'approveMembers';
   static const String lockMessages = 'lockMessages';
-  static const String requestToJoing = 'requestToJoing';
+  static const String requestToJoin = 'requestToJoin';
   static const String membersUIDs = 'membersUIDs';
   static const String adminsUIDs = 'adminsUIDs';
   static const String awaitingApprovalUIDs = 'awaitingApprovalUIDs';
@@ -96,8 +96,4 @@ class Constants {
   static const String friendRequestNotification = 'friendRequestNotification';
   static const String requestReplyNotification = 'requestReplyNotification';
   static const String groupRequestNotification = 'groupRequestNotification';
-
-
-
-
 }

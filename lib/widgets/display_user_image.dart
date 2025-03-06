@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
+
 import 'package:chat_app/utilities/assets_manager.dart';
+import 'package:flutter/material.dart';
 
 class DisplayUserImage extends StatelessWidget {
   const DisplayUserImage({

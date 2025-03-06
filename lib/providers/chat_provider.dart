@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
+
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/last_message_model.dart';
@@ -9,6 +7,9 @@ import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/models/message_reply_model.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatProvider extends ChangeNotifier {
@@ -641,7 +642,6 @@ class ChatProvider extends ChangeNotifier {
         if (messageType != MessageEnum.text.name) {
           // delete the file from storage
           await deleteFileFromStorage(
-
             currentUserId: currentUserId,
             contactUID: contactUID,
             messageId: messageId,

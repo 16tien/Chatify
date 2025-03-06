@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:chat_app/widgets/settings_list_tile.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ExitGroupCard extends StatelessWidget {

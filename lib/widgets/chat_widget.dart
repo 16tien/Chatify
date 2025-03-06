@@ -1,10 +1,10 @@
-import 'package:date_format/date_format.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/models/last_message_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:chat_app/widgets/unread_message_counter.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatWidget extends StatelessWidget {
@@ -55,9 +55,9 @@ class ChatWidget extends StatelessWidget {
         children: [
           uid == senderUID
               ? const Text(
-            'You:',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )
+                  'You:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
               : const SizedBox(),
           const SizedBox(width: 5),
           messageToShow(

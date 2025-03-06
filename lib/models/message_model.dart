@@ -72,7 +72,7 @@ class MessageModel {
       repliedMessage: map[Constants.repliedMessage] ?? '',
       repliedTo: map[Constants.repliedTo] ?? '',
       repliedMessageType:
-      map[Constants.repliedMessageType].toString().toMessageEnum(),
+          map[Constants.repliedMessageType].toString().toMessageEnum(),
       reactions: List<String>.from(map[Constants.reactions] ?? []),
       isSeenBy: List<String>.from(map[Constants.isSeenBy] ?? []),
       deletedBy: List<String>.from(map[Constants.deletedBy] ?? []),

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FriendWidget extends StatelessWidget {
@@ -35,7 +35,7 @@ class FriendWidget extends StatelessWidget {
       minLeadingWidth: 0.0,
       contentPadding: const EdgeInsets.only(left: -10),
       leading:
-      userImageWidget(imageUrl: friend.image, radius: 40, onTap: () {}),
+          userImageWidget(imageUrl: friend.image, radius: 40, onTap: () {}),
       title: Text(name),
       subtitle: Text(
         friend.aboutMe,
@@ -44,62 +44,62 @@ class FriendWidget extends StatelessWidget {
       ),
       trailing: viewType == FriendViewType.friendRequests
           ? ElevatedButton(
-        onPressed: () async {
-          if (groupId.isEmpty) {
-            // accept friend request
-            await context
-                .read<AuthenticationProvider>()
-                .acceptFriendRequest(friendID: friend.uid)
-                .whenComplete(() {
-              showSnackBar(
-                  context, 'You are now friends with ${friend.name}');
-            });
-          } else {
-            // accept group request
-            await context
-                .read<GroupProvider>()
-                .acceptRequestToJoinGroup(
-              groupId: groupId,
-              friendID: friend.uid,
+              onPressed: () async {
+                if (groupId.isEmpty) {
+                  // accept friend request
+                  await context
+                      .read<AuthenticationProvider>()
+                      .acceptFriendRequest(friendID: friend.uid)
+                      .whenComplete(() {
+                    showSnackBar(
+                        context, 'You are now friends with ${friend.name}');
+                  });
+                } else {
+                  // accept group request
+                  await context
+                      .read<GroupProvider>()
+                      .acceptRequestToJoinGroup(
+                        groupId: groupId,
+                        friendID: friend.uid,
+                      )
+                      .whenComplete(() {
+                    Navigator.pop(context);
+                    showSnackBar(context,
+                        '${friend.name} is now a member of this group');
+                  });
+                }
+              },
+              child: const Text('Accept'),
             )
-                .whenComplete(() {
-              Navigator.pop(context);
-              showSnackBar(context,
-                  '${friend.name} is now a member of this group');
-            });
-          }
-        },
-        child: const Text('Accept'),
-      )
           : viewType == FriendViewType.groupView
-          ? Checkbox(
-        value: getValue(),
-        onChanged: (value) {
-          // check the check box
-          if (isAdminView) {
-            if (value == true) {
-              context
-                  .read<GroupProvider>()
-                  .addMemberToAdmins(groupAdmin: friend);
-            } else {
-              context
-                  .read<GroupProvider>()
-                  .removeGroupAdmin(groupAdmin: friend);
-            }
-          } else {
-            if (value == true) {
-              context
-                  .read<GroupProvider>()
-                  .addMemberToGroup(groupMember: friend);
-            } else {
-              context
-                  .read<GroupProvider>()
-                  .removeGroupMember(groupMember: friend);
-            }
-          }
-        },
-      )
-          : null,
+              ? Checkbox(
+                  value: getValue(),
+                  onChanged: (value) {
+                    // check the check box
+                    if (isAdminView) {
+                      if (value == true) {
+                        context
+                            .read<GroupProvider>()
+                            .addMemberToAdmins(groupAdmin: friend);
+                      } else {
+                        context
+                            .read<GroupProvider>()
+                            .removeGroupAdmin(groupAdmin: friend);
+                      }
+                    } else {
+                      if (value == true) {
+                        context
+                            .read<GroupProvider>()
+                            .addMemberToGroup(groupMember: friend);
+                      } else {
+                        context
+                            .read<GroupProvider>()
+                            .removeGroupMember(groupMember: friend);
+                      }
+                    }
+                  },
+                )
+              : null,
       onTap: () {
         if (viewType == FriendViewType.friends) {
           // navigate to chat screen with the folowing arguments

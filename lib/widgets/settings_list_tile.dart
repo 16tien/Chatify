@@ -42,10 +42,10 @@ class SettingsListTile extends StatelessWidget {
       title: Text(title),
       subtitle: subtitle != null
           ? Text(
-        subtitle!,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-      )
+              subtitle!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            )
           : null,
       trailing: Icon(
         Platform.isAndroid ? Icons.arrow_forward : Icons.arrow_forward_ios,

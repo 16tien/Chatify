@@ -3,7 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class NotificationChannels {
   // high importance channel
   static const AndroidNotificationChannel highInportanceChannel =
-  AndroidNotificationChannel(
+      AndroidNotificationChannel(
     'high_importance_channel', // id
     'Chat Notifications', // title
     importance: Importance.max,
@@ -12,7 +12,7 @@ class NotificationChannels {
 
   // low importance channel
   static const AndroidNotificationChannel lowInportanceChannel =
-  AndroidNotificationChannel(
+      AndroidNotificationChannel(
     'low_importance_channel', // id
     'Request Notification', // title
     importance: Importance.min,

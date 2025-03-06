@@ -22,28 +22,28 @@ class SettingsSwitchListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         child: SwitchListTile(
-          title: Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.w600),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+      subtitle: Text(subtitle),
+      secondary: Container(
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Icon(
+            icon,
+            color: Colors.white,
           ),
-          subtitle: Text(subtitle),
-          secondary: Container(
-            decoration: BoxDecoration(
-              color: containerColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                icon,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          value: value,
-          onChanged: (value) {
-            onChanged(value);
-          },
-        ));
+        ),
+      ),
+      value: value,
+      onChanged: (value) {
+        onChanged(value);
+      },
+    ));
   }
 }

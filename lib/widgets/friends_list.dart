@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/widgets/friend_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FriendsList extends StatelessWidget {
@@ -23,18 +23,18 @@ class FriendsList extends StatelessWidget {
 
     final future = viewType == FriendViewType.friends
         ? context.read<AuthenticationProvider>().getFriendsList(
-      uid,
-      groupMembersUIDs,
-    )
+              uid,
+              groupMembersUIDs,
+            )
         : viewType == FriendViewType.friendRequests
-        ? context.read<AuthenticationProvider>().getFriendRequestsList(
-      uid: uid,
-      groupId: groupId,
-    )
-        : context.read<AuthenticationProvider>().getFriendsList(
-      uid,
-      groupMembersUIDs,
-    );
+            ? context.read<AuthenticationProvider>().getFriendRequestsList(
+                  uid: uid,
+                  groupId: groupId,
+                )
+            : context.read<AuthenticationProvider>().getFriendsList(
+                  uid,
+                  groupMembersUIDs,
+                );
 
     return FutureBuilder<List<UserModel>>(
       future: future,

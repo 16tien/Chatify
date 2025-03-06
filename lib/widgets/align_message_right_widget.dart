@@ -1,10 +1,10 @@
-import 'package:date_format/date_format.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/widgets/display_message_type.dart';
 import 'package:chat_app/widgets/message_reply_preview.dart';
+import 'package:date_format/date_format.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_chat_reactions/widgets/stacked_reactions.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ class AlignMessageRightWidget extends StatelessWidget {
     final isReplying = message.repliedTo.isNotEmpty;
     // get the reations from the list
     final messageReations =
-    message.reactions.map((e) => e.split('=')[1]).toList();
+        message.reactions.map((e) => e.split('=')[1]).toList();
     final padding = message.reactions.isNotEmpty
         ? const EdgeInsets.only(left: 20.0, bottom: 25.0)
         : const EdgeInsets.only(bottom: 0.0);
@@ -107,7 +107,7 @@ class AlignMessageRightWidget extends StatelessWidget {
                             Icon(
                               messageSeen() ? Icons.done_all : Icons.done,
                               color:
-                              messageSeen() ? Colors.blue : Colors.white60,
+                                  messageSeen() ? Colors.blue : Colors.white60,
                               size: 15,
                             ),
                           ],

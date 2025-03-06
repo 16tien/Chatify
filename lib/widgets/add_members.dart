@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/providers/group_provider.dart';
-
+import 'package:flutter/material.dart';
 
 class AddMembers extends StatelessWidget {
   const AddMembers({
@@ -29,22 +28,22 @@ class AddMembers extends StatelessWidget {
         !isAdmin
             ? const SizedBox()
             : Row(
-          children: [
-            const Text(
-              'Add Members',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(width: 10),
-            CircleAvatar(
-              child: IconButton(
-                onPressed: onPressed,
-                icon: const Icon(Icons.person_add),
-              ),
-            )
-          ],
-        )
+                children: [
+                  const Text(
+                    'Add Members',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  CircleAvatar(
+                    child: IconButton(
+                      onPressed: onPressed,
+                      icon: const Icon(Icons.person_add),
+                    ),
+                  )
+                ],
+              )
       ],
     );
   }

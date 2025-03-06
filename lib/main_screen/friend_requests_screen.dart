@@ -1,9 +1,9 @@
+import 'package:chat_app/enums/enums.dart';
+import 'package:chat_app/widgets/friends_list.dart';
+import 'package:chat_app/widgets/my_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/enums/enums.dart';
-import 'package:chat_app/widgets/my_app_bar.dart';
-import 'package:chat_app/widgets/friends_list.dart';
 
 class FriendRequestScreen extends StatefulWidget {
   const FriendRequestScreen({super.key, this.groupId = ''});
@@ -19,7 +19,7 @@ class _FriendRequestScreenState extends State<FriendRequestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: const Text('Requests'),
+        title: const Text('Yêu cầu'),
         onPressed: () => Navigator.pop(context),
       ),
       body: Padding(
@@ -28,7 +28,7 @@ class _FriendRequestScreenState extends State<FriendRequestScreen> {
           children: [
             // cupertinosearchbar
             CupertinoSearchTextField(
-              placeholder: 'Search',
+              placeholder: 'Tìm kiếm',
               style: const TextStyle(color: Colors.white),
               onChanged: (value) {
                 if (kDebugMode) {
@@ -39,9 +39,9 @@ class _FriendRequestScreenState extends State<FriendRequestScreen> {
 
             Expanded(
                 child: FriendsList(
-                  viewType: FriendViewType.friendRequests,
-                  groupId: widget.groupId,
-                )),
+              viewType: FriendViewType.friendRequests,
+              groupId: widget.groupId,
+            )),
           ],
         ),
       ),

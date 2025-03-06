@@ -5,7 +5,6 @@ import 'package:chat_app/main_screen/my_chats_screen.dart';
 import 'package:chat_app/main_screen/people_screen.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
-import 'package:chat_app/push_notification/navigation_controller.dart';
 import 'package:chat_app/push_notification/notification_services.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -21,8 +20,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   final PageController pageController = PageController(initialPage: 0);
   int currentIndex = 0;
 
@@ -75,65 +73,29 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void initCloudMessaging() async {
-    // Đợi widget khởi tạo trước khi chạy
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // 1. Tạo token mới cho Firebase
       await context.read<AuthenticationProvider>().generateNewToken();
-
-      // 2. Lắng nghe tin nhắn khi app mở
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print('Received a new message: ${message.messageId}');
-        print('Data: ${message.data}');
         if (message.data['type'] == 'call') {
-          // Xử lý thông báo cuộc gọi
-          print('Call notification received');
           String callerUid = message.data['callerId'];
-          // Hiển thị màn hình chờ cuộc gọi
           showCallWaitingScreen(callerUid);
         } else {
-          // Xử lý thông báo tin nhắn
-          print('Message notification received');
           NotificationServices.displayNotification(message);
         }
       });
     });
   }
 
-// Hiển thị màn hình chờ cuộc gọi
+// show incoming screen
   void showCallWaitingScreen(String callerUid) {
-    // Bạn có thể mở một màn hình chờ cho người dùng ở đây
     Navigator.pushNamed(context, Constants.incomingCallScreen,
         arguments: callerUid);
-  }
-
-  // It is assumed that all messages contain a data field with the key 'type'
-  Future<void> setupInteractedMessage() async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
-    RemoteMessage? initialMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-
-    // If the message also contains a data property with a "type" of "chat",
-    // navigate to a chat screen
-    if (initialMessage != null) {
-      _handleMessage(initialMessage);
-    }
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
-  }
-
-  void _handleMessage(RemoteMessage message) {
-    navigationController(context: context, message: message);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        // user comes back to the app
-        // update user status to online
         context.read<AuthenticationProvider>().updateUserStatus(
               value: true,
             );

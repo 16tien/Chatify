@@ -1,18 +1,17 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
-import 'package:chat_app/widgets/my_app_bar.dart';
 import 'package:chat_app/widgets/display_user_image.dart';
 import 'package:chat_app/widgets/friends_list.dart';
 import 'package:chat_app/widgets/group_type_list_tile.dart';
+import 'package:chat_app/widgets/my_app_bar.dart';
 import 'package:chat_app/widgets/settings_list_tile.dart';
+import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 
@@ -26,9 +25,10 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   // group name controller
   final TextEditingController groupNameController = TextEditingController();
+
   // group description controller
   final TextEditingController groupDescriptionController =
-  TextEditingController();
+      TextEditingController();
   File? finalFileImage;
   String userImage = '';
 
@@ -114,19 +114,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     final groupProvider = context.read<GroupProvider>();
     // check if the group name is empty
     if (groupNameController.text.isEmpty) {
-      showSnackBar(context, 'Please enter group name');
+      showSnackBar(context, 'Vui lòng nhập tên nhóm');
       return;
     }
 
     // name is less than 3 characters
     if (groupNameController.text.length < 3) {
-      showSnackBar(context, 'Group name must be at least 3 characters');
+      showSnackBar(context, 'Tên nhóm ít nhất 3 kí tự');
       return;
     }
 
     // check if the group description is empty
     if (groupDescriptionController.text.isEmpty) {
-      showSnackBar(context, 'Please enter group description');
+      showSnackBar(context, 'Vui lòng nhập mô tả nhóm');
       return;
     }
 
@@ -146,7 +146,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       editSettings: true,
       approveMembers: false,
       lockMessages: false,
-      requestToJoing: false,
+      requestToJoin: false,
       membersUIDs: [],
       adminsUIDs: [],
       awaitingApprovalUIDs: [],
@@ -157,7 +157,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       newGroupModel: groupModel,
       fileImage: finalFileImage,
       onSuccess: () {
-        showSnackBar(context, 'Group created successfully');
+        showSnackBar(context, 'Tạo nhóm than cng');
         Navigator.pop(context);
       },
       onFail: (error) {
@@ -170,7 +170,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: const Text('Create Group'),
+        title: const Text('Tạo nhóm'),
         onPressed: () => Navigator.pop(context),
         actions: [
           Padding(
@@ -179,11 +179,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               child: context.watch<GroupProvider>().isSloading
                   ? const CircularProgressIndicator()
                   : IconButton(
-                  onPressed: () {
-                    // create group
-                    createGroup();
-                  },
-                  icon: const Icon(Icons.check)),
+                      onPressed: () {
+                        // create group
+                        createGroup();
+                      },
+                      icon: const Icon(Icons.check)),
             ),
           )
         ],
@@ -231,8 +231,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               maxLength: 100,
               textInputAction: TextInputAction.done,
               decoration: const InputDecoration(
-                hintText: 'Group Description',
-                label: Text('Group Description'),
+                hintText: 'Mô tả nhóm',
+                label: Text('Mô tả nhóm'),
                 counterText: '',
                 border: OutlineInputBorder(),
               ),
@@ -245,7 +245,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   right: 8.0,
                 ),
                 child: SettingsListTile(
-                    title: 'Group Settings',
+                    title: 'Cài đặt nhóm',
                     icon: Icons.settings,
                     iconContainerColor: Colors.deepPurple,
                     onTap: () {
@@ -257,19 +257,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Select Group Members',
+              'Chọn thành viên',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
-
-            // cuppertino search bar
-            CupertinoSearchTextField(
-              onChanged: (value) {},
-            ),
-
             const SizedBox(height: 10),
 
             const Expanded(

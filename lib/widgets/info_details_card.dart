@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:chat_app/widgets/profile_widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +44,9 @@ class InfoDetailsCard extends StatelessWidget {
     final isGroup = userModel != null ? false : true;
 
     Widget getEditWidget(
-        String title,
-        String content,
-        ) {
+      String title,
+      String content,
+    ) {
       if (isGroup) {
         // check if user is admin
         if (isAdmin!) {
@@ -86,7 +86,7 @@ class InfoDetailsCard extends StatelessWidget {
                 },
                 editable: true,
                 hintText:
-                content == Constants.changeName ? profileName : aboutMe,
+                    content == Constants.changeName ? profileName : aboutMe,
               );
             },
             child: const Icon(Icons.edit_rounded),
@@ -197,23 +197,23 @@ class InfoDetailsCard extends StatelessWidget {
                       // display phone number
                       userModel != null && uid == userModel!.uid
                           ? Text(
-                        phoneNumber,
-                        style: GoogleFonts.openSans(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      )
+                              phoneNumber,
+                              style: GoogleFonts.openSans(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
                           : const SizedBox.shrink(),
                       const SizedBox(height: 5),
                       userModel != null
                           ? ProfileStatusWidget(
-                        userModel: userModel!,
-                        currentUser: authProvider.userModel!,
-                      )
+                              userModel: userModel!,
+                              currentUser: authProvider.userModel!,
+                            )
                           : GroupStatusWidget(
-                        isAdmin: isAdmin!,
-                        groupProvider: groupProvider!,
-                      ),
+                              isAdmin: isAdmin!,
+                              groupProvider: groupProvider!,
+                            ),
 
                       const SizedBox(height: 10),
                     ],

@@ -1,9 +1,9 @@
+import 'package:chat_app/enums/enums.dart';
+import 'package:chat_app/widgets/friends_list.dart';
+import 'package:chat_app/widgets/my_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/enums/enums.dart';
-import 'package:chat_app/widgets/my_app_bar.dart';
-import 'package:chat_app/widgets/friends_list.dart';
 
 class FriendsScreen extends StatefulWidget {
   const FriendsScreen({super.key});
@@ -17,7 +17,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: const Text('Friends'),
+        title: const Text('Bàn bè'),
         onPressed: () => Navigator.pop(context),
       ),
       body: Padding(
@@ -26,7 +26,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
           children: [
             // cupertinosearchbar
             CupertinoSearchTextField(
-              placeholder: 'Search',
+              placeholder: 'Tìm kiếm',
               style: const TextStyle(color: Colors.white),
               onChanged: (value) {
                 if (kDebugMode) {
@@ -43,8 +43,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
 
             const Expanded(
                 child: FriendsList(
-                  viewType: FriendViewType.friends,
-                )),
+              viewType: FriendViewType.friends,
+            )),
           ],
         ),
       ),

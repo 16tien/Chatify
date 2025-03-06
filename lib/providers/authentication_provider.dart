@@ -2,28 +2,27 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:googleapis_auth/auth_io.dart';
-import 'package:http/http.dart' as http;
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
+
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _isSuccessful = false;
-  int? _resendToken;
   String? _uid;
   String? _email;
   UserModel? _userModel;
-  final int _secondsRemaing = 60;
 
   File? _finalFileImage;
   final String _userImage = '';
@@ -32,15 +31,11 @@ class AuthenticationProvider extends ChangeNotifier {
 
   bool get isSuccessful => _isSuccessful;
 
-  int? get resendToken => _resendToken;
-
   String? get uid => _uid;
 
   String? get email => _email;
 
   UserModel? get userModel => _userModel;
-
-  int get secondsRemaing => _secondsRemaing;
 
   File? get finalFileImage => _finalFileImage;
 
@@ -247,7 +242,7 @@ class AuthenticationProvider extends ChangeNotifier {
       Navigator.pushNamedAndRemoveUntil(
         context,
         Constants.homeScreen,
-            (route) => false,
+        (route) => false,
       );
     } on FirebaseAuthException catch (e) {
       _isSuccessful = false;
@@ -661,8 +656,7 @@ class AuthenticationProvider extends ChangeNotifier {
   //luu anh
   Future<String> storeFileToCloudinary({
     required File file,
-    required String
-        reference, // Không dùng reference với Cloudinary nhưng giữ để phù hợp cấu trúc
+    required String reference,
   }) async {
     try {
       const String cloudName = 'dzpnecose';
@@ -727,7 +721,7 @@ class AuthenticationProvider extends ChangeNotifier {
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
-        "data":{
+        "data": {
           "type": "message",
           "notificationType": "friendRequestNotification"
         },
@@ -754,19 +748,21 @@ class AuthenticationProvider extends ChangeNotifier {
       print("Failed to send notification: ${response.body}");
     }
   }
+
   Future<void> sendCallRequest(String receiverId) async {
     _uid = _auth.currentUser!.uid;
     String bearerToken =
-    await getBearerToken(); // Lấy Bearer Token từ Service Account
+        await getBearerToken(); // Lấy Bearer Token từ Service Account
     String? token = await getTokenByUID(receiverId);
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
-    "data": {
-    "type": "call",
-    "callerId": _uid, // ID người gọi
-    },
-    }};
+        "data": {
+          "type": "call",
+          "callerId": _uid, // ID người gọi
+        },
+      }
+    };
 
     final response = await http.post(
       Uri.parse(
@@ -857,9 +853,11 @@ class AuthenticationProvider extends ChangeNotifier {
       notifyListeners(); // Cập nhật lại UI
     }
   }
+
   Future<Map<String, String>?> getUserNameAndImage(String uid) async {
     try {
-      DocumentSnapshot userDoc = await _firestore.collection("users").doc(uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection("users").doc(uid).get();
 
       if (userDoc.exists) {
         String name = userDoc["name"] ?? "Người dùng";

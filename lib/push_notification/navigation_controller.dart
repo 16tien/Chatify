@@ -1,23 +1,21 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/main_screen/friend_requests_screen.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/providers/group_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 navigationController({
   required BuildContext context,
   required RemoteMessage message,
 }) {
-
-
   switch (message.data[Constants.notificationType]) {
     case Constants.chatNotification:
-    // navigate to chat screen here
+      // navigate to chat screen here
       Navigator.pushNamed(
         context,
         Constants.chatScreen,
@@ -30,22 +28,22 @@ navigationController({
       );
       break;
     case Constants.friendRequestNotification:
-    // navigate to friend requests screen
+      // navigate to friend requests screen
       Navigator.pushNamed(
         context,
         Constants.friendRequestsScreen,
       );
       break;
     case Constants.requestReplyNotification:
-    // navigate to friend requests screen
-    // navigate to friends screen
+      // navigate to friend requests screen
+      // navigate to friends screen
       Navigator.pushNamed(
         context,
         Constants.friendsScreen,
       );
       break;
     case Constants.groupRequestNotification:
-    // navigate to friend requests screen
+      // navigate to friend requests screen
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
         return FriendRequestScreen(
           groupId: message.data[Constants.groupId],
@@ -54,12 +52,12 @@ navigationController({
       break;
 
     case Constants.groupChatNotification:
-    // parse the JSON string to a map
+      // parse the JSON string to a map
       Map<String, dynamic> jsonMap =
-      jsonDecode(message.data[Constants.groupModel]);
+          jsonDecode(message.data[Constants.groupModel]);
       // transform the map to a simple GroupModel object
       final Map<String, dynamic> flatGroupModelMap =
-      flattenGroupModelMap(jsonMap);
+          flattenGroupModelMap(jsonMap);
 
       final groupModel = GroupModel.fromMap(flatGroupModelMap);
       log('JSON: $jsonMap');
@@ -108,9 +106,9 @@ Map<String, dynamic> flattenGroupModelMap(Map<String, dynamic> complexMap) {
             .map<String>((item) => item['stringValue'] as String)
             .toList();
         break;
-    // Add other cases if necessary
+      // Add other cases if necessary
       default:
-      // Handle unknown types
+        // Handle unknown types
         flatMap[key] = null;
     }
   });

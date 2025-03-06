@@ -1,22 +1,18 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/enums/enums.dart';
 import 'package:chat_app/models/group_model.dart';
 import 'package:chat_app/models/message_model.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/utilities/global_methods.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class GroupProvider extends ChangeNotifier {
   bool _isSloading = false;
-  // bool _editSettings = true;
-  // bool _approveNewMembers = false;
-  // bool _requestToJoin = false;
-  // bool _lockMessages = false;
 
   GroupModel _groupModel = GroupModel(
     creatorUID: '',
@@ -34,7 +30,7 @@ class GroupProvider extends ChangeNotifier {
     editSettings: true,
     approveMembers: false,
     lockMessages: false,
-    requestToJoing: false,
+    requestToJoin: false,
     membersUIDs: [],
     adminsUIDs: [],
     awaitingApprovalUIDs: [],
@@ -58,12 +54,15 @@ class GroupProvider extends ChangeNotifier {
 
   // getters
   bool get isSloading => _isSloading;
+
   // bool get editSettings => _editSettings;
   // bool get approveNewMembers => _approveNewMembers;
   // bool get requestToJoin => _requestToJoin;
   // bool get lockMessages => _lockMessages;
   GroupModel get groupModel => _groupModel;
+
   List<UserModel> get groupMembersList => _groupMembersList;
+
   List<UserModel> get groupAdminsList => _groupAdminsList;
 
   // firebase initialization
@@ -92,7 +91,7 @@ class GroupProvider extends ChangeNotifier {
   }
 
   void setRequestToJoin({required bool value}) {
-    _groupModel.requestToJoing = value;
+    _groupModel.requestToJoin = value;
     notifyListeners();
     // return if groupID is empty - meaning we are creating a new group
     if (_groupModel.groupId.isEmpty) return;
@@ -286,7 +285,7 @@ class GroupProvider extends ChangeNotifier {
 
       // get the list of membersUIDs
       List<String> membersUIDs =
-      isAdmin ? _groupModel.adminsUIDs : _groupModel.membersUIDs;
+          isAdmin ? _groupModel.adminsUIDs : _groupModel.membersUIDs;
 
       for (var uid in membersUIDs) {
         var user = await _firestore.collection(Constants.users).doc(uid).get();
@@ -339,7 +338,7 @@ class GroupProvider extends ChangeNotifier {
       editSettings: true,
       approveMembers: false,
       lockMessages: false,
-      requestToJoing: false,
+      requestToJoin: false,
       membersUIDs: [],
       adminsUIDs: [],
       awaitingApprovalUIDs: [],
@@ -464,7 +463,7 @@ class GroupProvider extends ChangeNotifier {
         .where(Constants.isPrivate, isEqualTo: true)
         .snapshots()
         .map((event) =>
-        event.docs.map((doc) => GroupModel.fromMap(doc.data())).toList());
+            event.docs.map((doc) => GroupModel.fromMap(doc.data())).toList());
   }
 
   // get a stream all public groups that contains the our userId
@@ -543,7 +542,7 @@ class GroupProvider extends ChangeNotifier {
         .update({
       Constants.membersUIDs: FieldValue.arrayRemove([uid]),
       Constants.adminsUIDs:
-      isAdmin ? FieldValue.arrayRemove([uid]) : _groupModel.adminsUIDs,
+          isAdmin ? FieldValue.arrayRemove([uid]) : _groupModel.adminsUIDs,
     });
 
     // remove the user from group members list

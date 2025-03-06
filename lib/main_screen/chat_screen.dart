@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/widgets/botton_chat_field.dart';
 import 'package:chat_app/widgets/chat_app_bar.dart';
 import 'package:chat_app/widgets/chat_list.dart';
 import 'package:chat_app/widgets/group_chat_app_bar.dart';
+import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -16,7 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     // get arguments passed from previous screen
-    final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    final arguments = ModalRoute.of(context)?.settings.arguments as Map? ?? {};
     // get the contactUID from the arguments
     final contactUID = arguments[Constants.contactUID];
     // get the contactName from the arguments
@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: // get appBar color from theme
-        Theme.of(context).appBarTheme.backgroundColor,
+            Theme.of(context).appBarTheme.backgroundColor,
         title: isGroupChat
             ? GroupChatAppBar(groupId: groupId)
             : ChatAppBar(contactUID: contactUID),

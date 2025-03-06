@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GroupMembers extends StatelessWidget {
@@ -25,8 +25,8 @@ class GroupMembers extends StatelessWidget {
       return newNamesList.length == 2
           ? '${newNamesList[0]} and ${newNamesList[1]}'
           : newNamesList.length > 2
-          ? '${newNamesList.sublist(0, newNamesList.length - 1).join(', ')} and ${newNamesList.last}'
-          : newNamesList.first;
+              ? '${newNamesList.sublist(0, newNamesList.length - 1).join(', ')} and ${newNamesList.last}'
+              : newNamesList.first;
     }
 
     return StreamBuilder(
