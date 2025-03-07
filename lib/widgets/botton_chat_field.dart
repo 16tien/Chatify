@@ -287,7 +287,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                       print('request to join group');
                     },
                     child: const Text(
-                      'You are not a member of this group, \n click here to send request to join',
+                      'Bạn không phải thành viên của nhóm, \n nhấn vào đây để xin tham gia nhóm',
                       style: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
@@ -304,7 +304,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
             height: 50,
             child: Center(
               child: Text(
-                'Messages are locked, only admins can send messages',
+                'Tin nhắn bị khóa, chỉ có quản trị viên mới có thể gửi tin nhắn',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.red,
@@ -403,7 +403,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
                               ),
                               borderSide: BorderSide.none,
                             ),
-                            hintText: 'Type a message',
+                            hintText: 'Nhập tin nhắn',
                           ),
                           onChanged: (value) {
                             setState(() {

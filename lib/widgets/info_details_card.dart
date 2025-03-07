@@ -56,7 +56,7 @@ class InfoDetailsCard extends StatelessWidget {
                 context: context,
                 title: title,
                 content: content,
-                textAction: "Change",
+                textAction: "Thay đổi",
                 onActionTap: (value, updatedText) async {
                   if (value) {
                     if (content == Constants.changeName) {
@@ -67,7 +67,7 @@ class InfoDetailsCard extends StatelessWidget {
                         oldName: profileName,
                       );
                       if (isGroup) {
-                        if (name == 'Invalid name.') return;
+                        if (name == 'Tên không hợp lệ') return;
                         groupProvider!.setGroupName(name);
                       }
                     } else {
@@ -78,7 +78,7 @@ class InfoDetailsCard extends StatelessWidget {
                         oldDesc: aboutMe,
                       );
                       if (isGroup) {
-                        if (desc == 'Invalid description.') return;
+                        if (desc == 'Mô tả không hợp lệ') return;
                         groupProvider!.setGroupName(desc);
                       }
                     }
@@ -105,7 +105,7 @@ class InfoDetailsCard extends StatelessWidget {
               context: context,
               title: title,
               content: content,
-              textAction: "Change",
+              textAction: "Thay đổi",
               onActionTap: (value, updatedText) {
                 if (value) {
                   if (content == Constants.changeName) {
@@ -189,7 +189,7 @@ class InfoDetailsCard extends StatelessWidget {
                             width: 10,
                           ),
                           getEditWidget(
-                            'Change Name',
+                            'Đổi tên',
                             Constants.changeName,
                           ),
                         ],
@@ -228,13 +228,13 @@ class InfoDetailsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(userModel != null ? 'About Me' : 'Group Description',
+                Text(userModel != null ? 'Về tôi' : 'Mô tả nhóm',
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     )),
                 getEditWidget(
-                  'Change Status',
+                  'Thay đổi trạng thái',
                   Constants.changeDesc,
                 ),
               ],

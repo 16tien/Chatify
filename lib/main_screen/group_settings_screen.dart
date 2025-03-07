@@ -42,8 +42,8 @@ class _GroupSettingsScreenState extends State<GroupSettingsScreen> {
       return groupAdminsNames.length == 2
           ? '${groupAdminsNames[0]} và ${groupAdminsNames[1]}'
           : groupAdminsNames.length > 2
-              ? '${groupAdminsNames.sublist(0, groupAdminsNames.length - 1).join(', ')} and ${groupAdminsNames.last}'
-              : 'You';
+              ? '${groupAdminsNames.sublist(0, groupAdminsNames.length - 1).join(', ')} và ${groupAdminsNames.last}'
+              : 'Bạn';
     }
   }
 

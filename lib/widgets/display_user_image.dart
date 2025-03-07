@@ -43,29 +43,6 @@ class DisplayUserImage extends StatelessWidget {
         ),
       ],
     );
-    // : Stack(
-    //     children: [
-    //       CircleAvatar(
-    //         radius: radius,
-    //         backgroundImage: FileImage(File(finalFileImage!.path)),
-    //       ),
-    //       Positioned(
-    //         bottom: 0,
-    //         right: 0,
-    //         child: InkWell(
-    //           onTap: onPressed,
-    //           child: const CircleAvatar(
-    //             radius: 20,
-    //             backgroundColor: Colors.green,
-    //             child: Icon(
-    //               Icons.camera_alt,
-    //               color: Colors.white,
-    //               size: 20,
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   );
+
   }
 }

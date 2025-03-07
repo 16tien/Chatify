@@ -25,7 +25,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CupertinoSearchTextField(
-              placeholder: 'Search',
+              placeholder: 'Tìm kiếm',
               onChanged: (value) => setState(() => searchQuery = value),
               onSuffixTap: () {
                 setState(() => searchQuery = '');
@@ -39,7 +39,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
             child: searchQuery.isEmpty
                 ? const Center(
                     child: Text(
-                      'Search People',
+                      'Tìm mọi người',
                     ),
                   )
                 : AllPeopleSearchStream(

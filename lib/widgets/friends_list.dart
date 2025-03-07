@@ -44,7 +44,7 @@ class FriendsList extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text("No friends yet"));
+          return const Center(child: Text("Chưa có bạn bè"));
         }
 
         if (snapshot.connectionState == ConnectionState.done) {

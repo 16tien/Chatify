@@ -41,7 +41,7 @@ class _GoupMembersCardState extends State<GoupMembersCard> {
               }
               if (snapshot.data!.isEmpty) {
                 return const Center(
-                  child: Text('No members'),
+                  child: Text('Không thành viên'),
                 );
               }
               return ListView.builder(
@@ -69,10 +69,10 @@ class _GoupMembersCardState extends State<GoupMembersCard> {
                               // show dialog to remove member
                               showMyAnimatedDialog(
                                 context: context,
-                                title: 'Remove Member',
+                                title: 'Xóa thành viên',
                                 content:
-                                    'Are you sure you want to remove ${member.name} from the group?',
-                                textAction: 'Remove',
+                                    'Bạn có chắc muốn xóa ${member.name} ra khỏi nhóm?',
+                                textAction: 'Xóa',
                                 onActionTap: (value, updatedText) async {
                                   if (value) {
                                     //remove member from group

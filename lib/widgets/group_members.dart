@@ -19,11 +19,11 @@ class GroupMembers extends StatelessWidget {
     String getFormatedNames(List<String> names) {
       List<String> newNamesList = names.map((e) {
         return e == context.read<AuthenticationProvider>().userModel!.name
-            ? 'You'
+            ? 'Bạn'
             : e;
       }).toList();
       return newNamesList.length == 2
-          ? '${newNamesList[0]} and ${newNamesList[1]}'
+          ? '${newNamesList[0]} và ${newNamesList[1]}'
           : newNamesList.length > 2
               ? '${newNamesList.sublist(0, newNamesList.length - 1).join(', ')} and ${newNamesList.last}'
               : newNamesList.first;

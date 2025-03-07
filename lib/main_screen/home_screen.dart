@@ -10,6 +10,7 @@ import 'package:chat_app/utilities/global_methods.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -122,7 +123,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final authProvider = context.watch<AuthenticationProvider>();
     return Scaffold(
         appBar: AppBar(
-          title: const Text('CHATFITY'),
+          title: Text('CHATIFY', style: GoogleFonts.poppins(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+            color: Colors.blue
+          ),),
           actions: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -199,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     // Yêu cầu quyền Camera và Microphone
     PermissionStatus cameraStatus = await Permission.camera.request();
     PermissionStatus microphoneStatus = await Permission.microphone.request();
-
+    await Permission.storage.request();
     if (cameraStatus.isGranted && microphoneStatus.isGranted) {
       return true;
     } else {

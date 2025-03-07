@@ -19,22 +19,22 @@ class ExitGroupCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(left: 8.0, right: 8.0),
         child: SettingsListTile(
-          title: 'Exit Group',
+          title: 'Rời nhóm',
           icon: Icons.exit_to_app,
           iconContainerColor: Colors.red,
           onTap: () {
             // exit group
             showMyAnimatedDialog(
               context: context,
-              title: 'Exit Group',
-              content: 'Are you sure you want to exit the group?',
-              textAction: 'Exit',
+              title: 'Rời nhóm',
+              content: 'Bạn có chắc muốn rời nhóm?',
+              textAction: 'Rời nhóm',
               onActionTap: (value, updatedText) async {
                 if (value) {
                   // exit group
                   final groupProvider = context.read<GroupProvider>();
                   await groupProvider.exitGroup(uid: uid).whenComplete(() {
-                    showSnackBar(context, 'You have exited the group');
+                    showSnackBar(context, 'Bạn đã thoát nhóm');
                     // navigate to first screen
                     Navigator.popUntil(context, (route) => route.isFirst);
                   });

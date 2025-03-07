@@ -19,7 +19,7 @@ class AddMembers extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '${groupProvider.groupMembersList.length} members',
+          '${groupProvider.groupMembersList.length} thành viên',
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -30,7 +30,7 @@ class AddMembers extends StatelessWidget {
             : Row(
                 children: [
                   const Text(
-                    'Add Members',
+                    'Thêm thành viên',
                     style: TextStyle(
                       fontSize: 18,
                     ),

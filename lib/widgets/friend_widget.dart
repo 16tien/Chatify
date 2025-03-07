@@ -52,7 +52,7 @@ class FriendWidget extends StatelessWidget {
                       .acceptFriendRequest(friendID: friend.uid)
                       .whenComplete(() {
                     showSnackBar(
-                        context, 'You are now friends with ${friend.name}');
+                        context, 'Bạn đã trở thành bạn vè với ${friend.name}');
                   });
                 } else {
                   // accept group request
@@ -65,7 +65,7 @@ class FriendWidget extends StatelessWidget {
                       .whenComplete(() {
                     Navigator.pop(context);
                     showSnackBar(context,
-                        '${friend.name} is now a member of this group');
+                        '${friend.name} bây giờ là thành viên của nhóm');
                   });
                 }
               },

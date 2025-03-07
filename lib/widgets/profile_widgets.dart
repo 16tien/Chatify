@@ -29,10 +29,10 @@ class GroupStatusWidget extends StatelessWidget {
                   // show dialog to change group type
                   showMyAnimatedDialog(
                     context: context,
-                    title: 'Change Group Type',
+                    title: 'Thay đổi riêng tư',
                     content:
-                        'Are you sure you want to change the group type to ${groupProvider.groupModel.isPrivate ? 'Public' : 'Private'}?',
-                    textAction: 'Change',
+                        'Bạn có chắc muốn thay đổi loại nhóm ${groupProvider.groupModel.isPrivate ? 'Mở' : 'Riêng tư'}?',
+                    textAction: 'Thay đổi',
                     onActionTap: (value, updatedText) {
                       if (value) {
                         // change group type
@@ -48,7 +48,7 @@ class GroupStatusWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(5),
             ),
             child: Text(
-              groupProvider.groupModel.isPrivate ? 'Private' : 'Public',
+              groupProvider.groupModel.isPrivate ? 'Riêng tư' : 'Mở',
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -136,10 +136,10 @@ class FriendsButton extends StatelessWidget {
                     .read<AuthenticationProvider>()
                     .cancleFriendRequest(friendID: userModel.uid)
                     .whenComplete(() {
-                  showSnackBar(context, 'friend request canclled');
+                  showSnackBar(context, 'Hủy yêu cầu kết bạn');
                 });
               },
-              label: 'Cancle Request',
+              label: 'Hủy yêu cầu',
               width: MediaQuery.of(context).size.width * 0.7,
               backgroundColor: Theme.of(context).cardColor,
               textColor: Theme.of(context).colorScheme.primary,
@@ -172,11 +172,11 @@ class FriendsButton extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text(
-                          'Unfriend',
+                          'Hủy kết bạn',
                           textAlign: TextAlign.center,
                         ),
                         content: Text(
-                          'Are you sure you want to Unfriend ${userModel.name}?',
+                          'Bạn có chắc muốn xóa bạn bè ${userModel.name}?',
                           textAlign: TextAlign.center,
                         ),
                         actions: [
@@ -184,7 +184,7 @@ class FriendsButton extends StatelessWidget {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text('Cancel'),
+                            child: const Text('Hủy'),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -195,16 +195,16 @@ class FriendsButton extends StatelessWidget {
                                   .removeFriend(friendID: userModel.uid)
                                   .whenComplete(() {
                                 showSnackBar(
-                                    context, 'You are no longer friends');
+                                    context, 'Không còn là bạn bè');
                               });
                             },
-                            child: const Text('Yes'),
+                            child: const Text('Có'),
                           ),
                         ],
                       ),
                     );
                   },
-                  label: 'Unfriend',
+                  label: 'Xóa bạn bè',
                   width: MediaQuery.of(context).size.width * 0.3,
                   // Giảm width cho nút Unfriend
                   backgroundColor: Colors.deepPurple,
@@ -222,7 +222,7 @@ class FriendsButton extends StatelessWidget {
                           Constants.groupId: ''
                         });
                   },
-                  label: 'Chat',
+                  label: 'Trò chuyện',
                   width: MediaQuery.of(context).size.width * 0.3,
                   // Giảm width cho nút Chat
                   backgroundColor: Theme.of(context).cardColor,
@@ -238,7 +238,7 @@ class FriendsButton extends StatelessWidget {
                     .sendFriendRequest(friendID: userModel.uid)
                     .whenComplete(() {});
               },
-              label: 'Send Request',
+              label: 'Gửi yêu cầu ',
               width: MediaQuery.of(context).size.width * 0.7,
               backgroundColor: Theme.of(context).cardColor,
               textColor: Theme.of(context).colorScheme.primary,
