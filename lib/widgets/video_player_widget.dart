@@ -21,7 +21,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   late CachedVideoPlayerPlusController videoPlayerController;
   bool isPlaying = false;
   bool isLoading = true;
-
   @override
   void initState() {
     videoPlayerController =
@@ -51,7 +50,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9, // Điều chỉnh tỷ lệ khung hình
+      aspectRatio: 16 / 9,
       child: Stack(
         children: [
           isLoading

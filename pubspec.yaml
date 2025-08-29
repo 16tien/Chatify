@@ -57,7 +57,7 @@ dependencies:
   flutter_animate: ^4.5.2
   cached_network_image: ^3.3.1
   flutter_sound_record: ^3.3.2
-  permission_handler: ^11.1.0
+  permission_handler: ^12.0.1
   audioplayers: ^6.0.0
   path_provider: ^2.1.2
   cached_video_player_plus: ^3.0.3
@@ -72,11 +72,12 @@ dependencies:
   firebase_storage_web: ^3.10.5
   flutter_animated_dialog: ^2.0.1
   googleapis_auth: ^1.6.0
-  zego_uikit_prebuilt_call: ^4.16.23
-  zego_uikit_prebuilt_video_conference: ^2.9.9
   firebase_analytics: ^11.4.4
-
-
+  zego_uikit_prebuilt_call: ^4.18.0
+  zego_uikit_prebuilt_video_conference: ^2.10.2
+  zego_uikit_signaling_plugin: ^2.8.16
+  zego_zpns: ^2.8.0
+  zego_plugin_adapter: ^2.13.10
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -57,7 +57,7 @@ class ChatsStream extends StatelessWidget {
           );
         }
         return const Center(
-          child: Text('No chats yet'),
+          child: Text('Hãy gửi một tin nhắn'),
         );
       },
     );

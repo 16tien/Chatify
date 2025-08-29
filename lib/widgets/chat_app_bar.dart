@@ -1,5 +1,4 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/main_screen/call_screen.dart';
 import 'package:chat_app/models/user_model.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/utilities/global_methods.dart';
@@ -8,6 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import '../main_screen/call_screen.dart';
+import '../main_screen/calling_screen.dart';
+import '../models/call_model.dart';
+import '../providers/call_provider.dart';
+
 
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
@@ -46,7 +51,6 @@ class _ChatAppBarState extends State<ChatAppBar> {
               imageUrl: userModel.image,
               radius: 20,
               onTap: () {
-                // Chuyển đến màn hình hồ sơ của bạn bè với UID làm tham số
                 Navigator.pushNamed(
                   context,
                   Constants.profileScreen,
@@ -64,7 +68,7 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 ),
                 Text(
                   userModel.isOnline
-                      ? 'Online'
+                      ? 'Trực tuyến'
                       : 'Last seen ${timeago.format(lastSeen)}',
                   style: GoogleFonts.openSans(
                     fontSize: 12,
@@ -76,37 +80,47 @@ class _ChatAppBarState extends State<ChatAppBar> {
               ],
             ),
             const Spacer(),
-            // Nút gọi điện
             IconButton(
               icon: const Icon(Icons.call),
               onPressed: () async {
                 final authProvider = context.read<AuthenticationProvider>();
-                final String? callerID = authProvider.uid; // ID của người gọi
-                final String name = authProvider.userModel!.name;
-                final String receiverID = userModel.uid; // ID người nhận
-                final String callID =
-                    "$callerID$receiverID"; // Mã phòng duy nhất
-                authProvider.sendCallRequest(receiverID);
-                // Lưu thông tin cuộc gọi lên Firestore
-                FirebaseFirestore.instance.collection('calls').doc(callID).set({
-                  'callerID': callerID,
-                  'receiverID': receiverID,
-                  'timestamp': FieldValue.serverTimestamp(),
-                  'status': 'ringing', // Trạng thái cuộc gọi đang đổ chuông
-                });
+                final currentUserId = authProvider.uid!;
+                final currentUserName = authProvider.userModel!.name;
 
-                // Điều hướng đến màn hình chờ cuộc gọi
+                final receiverId = userModel.uid;
+                final receiverName = userModel.name;
+                final callId = '${currentUserId}$receiverId';
+
+                final callModel = {
+                  'callId': callId,
+                  'callerId': currentUserId,
+                  'callerName': currentUserName,
+                  'receiverId': receiverId,
+                  'receiverName': receiverName,
+                  'status': 'ringing',
+                  'timestamp': FieldValue.serverTimestamp(),
+                };
+
+                // 1. Lưu vào Firestore
+                await FirebaseFirestore.instance
+                    .collection('calls')
+                    .doc(callId)
+                    .set(callModel);
+                await context.read<AuthenticationProvider>().sendCallRequest(receiverId);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CallScreen(
-                        callID: callerID! + receiverID,
-                        userID: callID,
-                        userName: name),
+                    builder: (_) => CallingScreen(
+                      callId: callId,
+                      userId: currentUserId,
+                      isCaller: true,
+                      receiverName: receiverName,
+                    ),
                   ),
                 );
               },
-            ),
+            )
+
           ],
         );
       },

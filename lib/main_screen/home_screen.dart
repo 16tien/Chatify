@@ -5,7 +5,6 @@ import 'package:chat_app/main_screen/my_chats_screen.dart';
 import 'package:chat_app/main_screen/people_screen.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
-import 'package:chat_app/push_notification/notification_services.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import 'incoming_call_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     checkPermissions();
     WidgetsBinding.instance.addObserver(this);
     requestNotificationPermissions();
-    NotificationServices.createNotificationChannelAndInitialize();
     initCloudMessaging();
     super.initState();
   }
@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  // request notification permissions
   void requestNotificationPermissions() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -74,23 +73,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void initCloudMessaging() async {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await context.read<AuthenticationProvider>().generateNewToken();
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        if (message.data['type'] == 'call') {
-          String callerUid = message.data['callerId'];
-          showCallWaitingScreen(callerUid);
-        } else {
-          NotificationServices.displayNotification(message);
-        }
-      });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.data['type'] == 'call') {
+        final callId = message.data['callId'] ?? '';
+        final callerName = message.data['callerName'] ?? 'Người lạ';
+      print(callerName);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => IncomingCallScreen(callId: callId),
+          ),
+        );
+      }
     });
   }
 
 // show incoming screen
-  void showCallWaitingScreen(String callerUid) {
-    Navigator.pushNamed(context, Constants.incomingCallScreen,
-        arguments: callerUid);
+  void showCallWaitingScreen() {
+    Navigator.pushNamed(context, Constants.incomingCallScreen);
   }
 
   @override
@@ -202,7 +202,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<bool> checkPermissions() async {
-    // Yêu cầu quyền Camera và Microphone
     PermissionStatus cameraStatus = await Permission.camera.request();
     PermissionStatus microphoneStatus = await Permission.microphone.request();
     await Permission.storage.request();

@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../utilities/assets_manager.dart';
-import 'register_screen.dart'; // Import màn hình đăng ký
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -86,11 +86,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Nút đăng nhập và đăng ký trên cùng một hàng
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // Nút Đăng nhập
                     authProvider.isLoading
                         ? const CircularProgressIndicator()
                         : ElevatedButton(

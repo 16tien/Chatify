@@ -64,7 +64,6 @@ class AuthenticationProvider extends ChangeNotifier {
                 selectImage(
                   fromCamera: true,
                   onSuccess: () {
-                    // pop the bottom sheet and call the onSuccess function
                     Navigator.pop(context);
                     onSuccess();
                   },
@@ -81,7 +80,6 @@ class AuthenticationProvider extends ChangeNotifier {
                 selectImage(
                   fromCamera: false,
                   onSuccess: () {
-                    // pop the bottom sheet and call the onSuccess function
                     Navigator.pop(context);
                     onSuccess();
                   },
@@ -138,17 +136,14 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  // chech authentication state
   Future<bool> checkAuthenticationState() async {
     bool isSignedIn = false;
     await Future.delayed(const Duration(seconds: 2));
 
     if (_auth.currentUser != null) {
       _uid = _auth.currentUser!.uid;
-      // get user data from firestore
       await getUserDataFromFireStore();
 
-      // save user data to shared preferences
       await saveUserDataToSharedPreferences();
 
       notifyListeners();
@@ -161,7 +156,6 @@ class AuthenticationProvider extends ChangeNotifier {
     return isSignedIn;
   }
 
-  // chech if user exists
   Future<bool> checkUserExists() async {
     DocumentSnapshot documentSnapshot =
         await _firestore.collection(Constants.users).doc(_uid).get();
@@ -172,7 +166,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  // update user status
   Future<void> updateUserStatus({required bool value}) async {
     await _firestore
         .collection(Constants.users)
@@ -180,35 +173,28 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.isOnline: value});
   }
 
-  // get user data from firestore
   Future<void> getUserDataFromFireStore() async {
     try {
       DocumentSnapshot documentSnapshot =
           await _firestore.collection(Constants.users).doc(_uid).get();
 
-      // Kiểm tra nếu tài liệu không tồn tại hoặc dữ liệu null
       if (!documentSnapshot.exists || documentSnapshot.data() == null) {
         throw Exception("Không tìm thấy dữ liệu người dùng");
       }
-
-      // Lấy dữ liệu và ép kiểu sang Map<String, dynamic>
       _userModel =
           UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
-      notifyListeners(); // Cập nhật UI
+      notifyListeners();
     } catch (e) {
       log('Lỗi khi lấy dữ liệu người dùng: $e');
-      // Bạn có thể hiển thị thông báo lỗi hoặc xử lý theo nhu cầu
     }
   }
 
-  // save user data to shared preferences
   Future<void> saveUserDataToSharedPreferences() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.setString(
         Constants.userModel, jsonEncode(userModel!.toMap()));
   }
 
-  // get data from shared preferences
   Future<void> getUserDataFromSharedPreferences() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String userModelString =
@@ -232,13 +218,16 @@ class AuthenticationProvider extends ChangeNotifier {
         password: password,
       );
       _uid = userCredential.user!.uid;
+
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        await updateUserFcmToken(_uid!, fcmToken);
+      }
+
       _isSuccessful = true;
       _isLoading = false;
-      //Get data user
       await getUserDataFromFireStore();
-      // * save user information to provider / shared preferences
       await saveUserDataToSharedPreferences();
-      // Điều hướng đến màn hình chính sau khi đăng nhập thành công
       Navigator.pushNamedAndRemoveUntil(
         context,
         Constants.homeScreen,
@@ -261,7 +250,11 @@ class AuthenticationProvider extends ChangeNotifier {
       showSnackBar(context, errorMessage);
     }
   }
-
+  Future<void> updateUserFcmToken(String uid, String token) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      'token': token,
+    });
+  }
   // save user data to firestore
   void saveUserDataToFireStore({
     required UserModel userModel,
@@ -752,14 +745,15 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<void> sendCallRequest(String receiverId) async {
     _uid = _auth.currentUser!.uid;
     String bearerToken =
-        await getBearerToken(); // Lấy Bearer Token từ Service Account
+        await getBearerToken();
     String? token = await getTokenByUID(receiverId);
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
         "data": {
           "type": "call",
-          "callerId": _uid, // ID người gọi
+          "callerId": _uid,
+          "callId":_uid.toString() + receiverId.toString(),
         },
       }
     };
@@ -783,15 +777,12 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<String?> getTokenByUID(String uid) async {
     try {
-      // Lấy tài liệu người dùng từ Firestore dựa trên UID
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users') // Tên collection của bạn
-          .doc(uid) // UID của người dùng
+          .collection('users')
+          .doc(uid)
           .get();
 
-      // Kiểm tra nếu tài liệu tồn tại
       if (userDoc.exists) {
-        // Lấy trường 'token' từ tài liệu người dùng
         String token = userDoc['token'];
         return token;
       } else {
@@ -810,7 +801,7 @@ class AuthenticationProvider extends ChangeNotifier {
     required BuildContext context,
   }) async {
     _isLoading = true;
-    notifyListeners(); // Cập nhật trạng thái loading
+    notifyListeners();
 
     try {
       UserCredential userCredential =
@@ -819,17 +810,12 @@ class AuthenticationProvider extends ChangeNotifier {
         password: password,
       );
 
-      // Kiểm tra nếu đăng ký thành công
       if (userCredential.user != null) {
-        // Lưu email vào authProvider
         _email = userCredential.user!.email;
         _uid = userCredential.user!.uid;
-        // Hiển thị thông báo thành công
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Đăng ký thành công!")),
         );
-
-        // Chuyển sang màn hình nhập thông tin người dùng
         Navigator.pushReplacementNamed(
             context, Constants.userInformationScreen);
       }
@@ -844,25 +830,21 @@ class AuthenticationProvider extends ChangeNotifier {
       } else {
         message = "Lỗi không xác định: ${e.message}";
       }
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message)),
       );
     } finally {
       _isLoading = false;
-      notifyListeners(); // Cập nhật lại UI
+      notifyListeners();
     }
   }
-
   Future<Map<String, String>?> getUserNameAndImage(String uid) async {
     try {
       DocumentSnapshot userDoc =
           await _firestore.collection("users").doc(uid).get();
-
       if (userDoc.exists) {
         String name = userDoc["name"] ?? "Người dùng";
         String imageUrl = userDoc["image"] ?? "";
-
         return {"name": name, "image": imageUrl};
       }
     } catch (e) {

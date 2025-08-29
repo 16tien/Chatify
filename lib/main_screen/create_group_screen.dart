@@ -23,10 +23,8 @@ class CreateGroupScreen extends StatefulWidget {
 }
 
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
-  // group name controller
   final TextEditingController groupNameController = TextEditingController();
 
-  // group description controller
   final TextEditingController groupDescriptionController =
       TextEditingController();
   File? finalFileImage;
@@ -40,7 +38,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       },
     );
 
-    // crop image
     await cropImage(finalFileImage?.path);
 
     popContext();
@@ -79,14 +76,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                 selectImage(true);
               },
               leading: const Icon(Icons.camera_alt),
-              title: const Text('Camera'),
+              title: const Text('Máy ảnh'),
             ),
             ListTile(
               onTap: () {
                 selectImage(false);
               },
               leading: const Icon(Icons.image),
-              title: const Text('Gallery'),
+              title: const Text('Thư viện'),
             ),
           ],
         ),
@@ -108,23 +105,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   GroupType groupValue = GroupType.private;
 
-  // create group
   void createGroup() {
     final uid = context.read<AuthenticationProvider>().userModel!.uid;
     final groupProvider = context.read<GroupProvider>();
-    // check if the group name is empty
     if (groupNameController.text.isEmpty) {
       showSnackBar(context, 'Vui lòng nhập tên nhóm');
       return;
     }
 
-    // name is less than 3 characters
     if (groupNameController.text.length < 3) {
       showSnackBar(context, 'Tên nhóm ít nhất 3 kí tự');
       return;
     }
 
-    // check if the group description is empty
     if (groupDescriptionController.text.isEmpty) {
       showSnackBar(context, 'Vui lòng nhập mô tả nhóm');
       return;
@@ -152,12 +145,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       awaitingApprovalUIDs: [],
     );
 
-    // create group
     groupProvider.createGroup(
       newGroupModel: groupModel,
       fileImage: finalFileImage,
       onSuccess: () {
-        showSnackBar(context, 'Tạo nhóm than cng');
+        showSnackBar(context, 'Tạo nhóm thành công');
         Navigator.pop(context);
       },
       onFail: (error) {
@@ -218,14 +210,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               maxLength: 25,
               textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
-                hintText: 'Group Name',
-                label: Text('Group Name'),
+                hintText: 'Tên nhóm',
+                label: Text('Tên nhóm'),
                 counterText: '',
                 border: OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 10),
-            // textField for group description
             TextField(
               controller: groupDescriptionController,
               maxLength: 100,
@@ -249,7 +240,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     icon: Icons.settings,
                     iconContainerColor: Colors.deepPurple,
                     onTap: () {
-                      // navigate to group settings screen
                       Navigator.pushNamed(
                           context, Constants.groupSettingsScreen);
                     }),

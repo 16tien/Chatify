@@ -55,7 +55,7 @@ class ChatWidget extends StatelessWidget {
         children: [
           uid == senderUID
               ? const Text(
-                  'You:',
+                  'Bạn:',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 )
               : const SizedBox(),

@@ -31,7 +31,6 @@ class ChatList extends StatefulWidget {
 }
 
 class _ChatListState extends State<ChatList> {
-  // scroll controller
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -40,11 +39,10 @@ class _ChatListState extends State<ChatList> {
     super.dispose();
   }
 
-  void onContextMenyClicked(
+  void onContextMenuClicked(
       {required String item, required MessageModel message}) {
     switch (item) {
       case 'Reply':
-        // set the message reply to true
         final messageReply = MessageReplyModel(
           message: message.message,
           senderUID: message.senderUID,
@@ -69,14 +67,14 @@ class _ChatListState extends State<ChatList> {
         if (widget.groupId.isNotEmpty) {
           if (groupProvider.isSenderOrAdmin(
               message: message, uid: currentUserId)) {
-            showDeletBottomSheet(
+            showDeleteBottomSheet(
               message: message,
               currentUserId: currentUserId,
               isSenderOrAdmin: true,
             );
             return;
           } else {
-            showDeletBottomSheet(
+            showDeleteBottomSheet(
               message: message,
               currentUserId: currentUserId,
               isSenderOrAdmin: false,
@@ -84,7 +82,7 @@ class _ChatListState extends State<ChatList> {
             return;
           }
         }
-        showDeletBottomSheet(
+        showDeleteBottomSheet(
           message: message,
           currentUserId: currentUserId,
           isSenderOrAdmin: true,
@@ -93,7 +91,7 @@ class _ChatListState extends State<ChatList> {
     }
   }
 
-  void showDeletBottomSheet({
+  void showDeleteBottomSheet({
     required MessageModel message,
     required String currentUserId,
     required bool isSenderOrAdmin,
@@ -291,10 +289,7 @@ class _ChatListState extends State<ChatList> {
                       );
                 }
               }
-
-              // check if we sent the last message
               final isMe = element.senderUID == uid;
-              // if the deletedBy contains the current user id then dont show the message
               bool deletedByCurrentUser = message.deletedBy.contains(uid);
               return deletedByCurrentUser
                   ? const SizedBox.shrink()
@@ -328,7 +323,7 @@ class _ChatListState extends State<ChatList> {
                                 }
                               },
                               onContextMenuTap: (item) {
-                                onContextMenyClicked(
+                                onContextMenuClicked(
                                   item: item.label,
                                   message: message,
                                 );

@@ -17,7 +17,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(
-        title: const Text('Bàn bè'),
+        title: const Text('Bạn bè'),
         onPressed: () => Navigator.pop(context),
       ),
       body: Padding(

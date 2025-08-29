@@ -11,26 +11,27 @@ import 'package:chat_app/main_screen/friends_screen.dart';
 import 'package:chat_app/main_screen/group_information_screen.dart';
 import 'package:chat_app/main_screen/group_settings_screen.dart';
 import 'package:chat_app/main_screen/home_screen.dart';
-import 'package:chat_app/main_screen/incoming_call_screen.dart';
 import 'package:chat_app/main_screen/profile_screen.dart';
 import 'package:chat_app/providers/authentication_provider.dart';
 import 'package:chat_app/providers/chat_provider.dart';
 import 'package:chat_app/providers/group_provider.dart';
-import 'package:chat_app/push_notification/notification_services.dart';
 import 'package:chat_app/utilities/global_methods.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'notifycation/push_notification_service.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  await PushNotificationService().init();
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
+
   runApp(
     MultiProvider(
       providers: [
@@ -41,10 +42,6 @@ void main() async {
       child: MyApp(savedThemeMode: savedThemeMode),
     ),
   );
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  NotificationServices.displayNotification(message);
 }
 
 class MyApp extends StatelessWidget {
@@ -70,16 +67,14 @@ class MyApp extends StatelessWidget {
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
-        title: 'Flutter Chat Pro',
         theme: theme,
         darkTheme: darkTheme,
         initialRoute: Constants.landingScreen,
         routes: {
           Constants.landingScreen: (context) => const LandingScreen(),
-          Constants.incomingCallScreen: (context) => const IncomingCallScreen(),
+          // Constants.incomingCallScreen: (context) => const IncomingCallScreen(),
           Constants.registerScreen: (context) => const RegisterScreen(),
           Constants.loginScreen: (context) => const LoginScreen(),
-          // Constants.otpScreen: (context) => const OTPScreen(),
           Constants.userInformationScreen: (context) =>
               const UserInformationScreen(),
           Constants.homeScreen: (context) => const HomeScreen(),
