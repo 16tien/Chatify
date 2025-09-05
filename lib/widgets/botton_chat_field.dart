@@ -236,7 +236,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
         message: _textEditingController.text,
         messageType: MessageEnum.text,
         groupId: widget.groupId,
-        onSucess: () {
+        onSuccess: () {
           _textEditingController.clear();
           _focusNode.unfocus();
         },

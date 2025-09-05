@@ -21,7 +21,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'notifycation/push_notification_service.dart';
+import 'notifycation/notification_service.dart';
 
 
 void main() async {
@@ -29,7 +29,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await PushNotificationService().init();
+  await NotificationService().init();
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
 
   runApp(
@@ -49,7 +49,6 @@ class MyApp extends StatelessWidget {
 
   final AdaptiveThemeMode? savedThemeMode;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return AdaptiveTheme(

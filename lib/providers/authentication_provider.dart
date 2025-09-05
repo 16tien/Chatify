@@ -709,20 +709,30 @@ class AuthenticationProvider extends ChangeNotifier {
   Future<void> sendPushNotification(
       String friendID, String title, String body) async {
     String bearerToken =
-        await getBearerToken(); // Lấy Bearer Token từ Service Account
+        await getBearerToken();
     String? token = await getTokenByUID(friendID);
     final Map<String, dynamic> message = {
       "message": {
         "token": token,
-        "data": {
-          "type": "message",
-          "notificationType": "friendRequestNotification"
-        },
         "notification": {
           "title": title,
           "body": body,
         },
-      },
+        "android": {
+          "priority": "HIGH",
+          "notification": {
+            "channel_id": "chat_channel",
+            "sound": "custom_sound",
+            "click_action": "FLUTTER_NOTIFICATION_CLICK"
+          }
+        },
+        "data": {
+          "screen": "chat",
+          "chatId": "12345",
+          "senderId": "67890",
+          "senderName": "Alice"
+        }
+      }
     };
 
     final response = await http.post(

@@ -4,7 +4,6 @@ class Constants {
 // screens routs
   static const String landingScreen = '/landingScreen';
   static const String loginScreen = '/loginScreen';
-  static const String otpScreen = '/otpScreen';
   static const String registerScreen = '/registerScreen';
   static const String userInformationScreen = '/userInformationScreen';
   static const String homeScreen = '/homeScreen';
@@ -69,6 +68,7 @@ class Constants {
   static const String messages = 'messages';
   static const String groups = 'groups';
   static const chatFiles = 'chatFiles';
+  static const String screen = 'screen';
 
   static const String private = 'private';
   static const String public = 'public';

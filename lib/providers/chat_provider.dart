@@ -46,7 +46,7 @@ class ChatProvider extends ChangeNotifier {
     required String message,
     required MessageEnum messageType,
     required String groupId,
-    required Function onSucess,
+    required Function onSuccess,
     required Function(String) onError,
   }) async {
     setLoading(true);
@@ -94,7 +94,7 @@ class ChatProvider extends ChangeNotifier {
         });
 
         setLoading(false);
-        onSucess();
+        onSuccess();
         setMessageReplyModel(null);
       } else {
         await handleContactMessage(
@@ -102,7 +102,7 @@ class ChatProvider extends ChangeNotifier {
           contactUID: contactUID,
           contactName: contactName,
           contactImage: contactImage,
-          onSucess: onSucess,
+          onSucess: onSuccess,
           onError: onError,
         );
 

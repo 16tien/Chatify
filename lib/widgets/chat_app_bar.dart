@@ -7,13 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
-import '../main_screen/call_screen.dart';
 import '../main_screen/calling_screen.dart';
-import '../models/call_model.dart';
-import '../providers/call_provider.dart';
-
-
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
 
