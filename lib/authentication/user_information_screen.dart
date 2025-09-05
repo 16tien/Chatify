@@ -112,7 +112,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
       email: authProvider.email!,
       image: '',
       token: '',
-      aboutMe: 'Hey there, I\'m using Flutter Chat Pro',
+      aboutMe: 'Xin chào',
       lastSeen: '',
       createdAt: '',
       isOnline: true,
@@ -124,9 +124,7 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
     authProvider.saveUserDataToFireStore(
       userModel: userModel,
       onSuccess: () async {
-        // save user data to shared preferences
         await authProvider.saveUserDataToSharedPreferences();
-
         navigateToHomeScreen();
       },
       onFail: () async {
@@ -136,7 +134,6 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
   }
 
   void navigateToHomeScreen() {
-    // navigate to home screen and remove all previous screens
     Navigator.of(context).pushNamedAndRemoveUntil(
       Constants.homeScreen,
       (route) => false,

@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Text("Đăng nhập"),
                           ),
 
-                    // Nút Đăng ký
+                    // Register Button
                     OutlinedButton(
                       onPressed: () {
                         Navigator.push(

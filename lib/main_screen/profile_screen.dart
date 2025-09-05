@@ -133,8 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               icon: Icons.notifications,
                               iconContainerColor: Colors.red,
                               onTap: () {
-                                // navigate to account settings
-
+                                  authProvider.sendPushNotification('4liYyFoekSeStSL51neHcF8SPJA3', "hellooo", "xin chao");
                               },
                             ),
                           ],
@@ -193,17 +192,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           trailing: Switch(
                               value: isDarkMode,
                               onChanged: (value) {
-                                // set the isDarkMode to the value
                                 setState(() {
                                   isDarkMode = value;
-                                });
-                                // check if the value is true
+                                }); // check if the value is true
                                 if (value) {
-                                  // set the theme mode to dark
                                   AdaptiveTheme.of(context)
                                       .setDark();
                                 } else {
-                                  // set the theme mode to light
                                   AdaptiveTheme.of(context)
                                       .setLight();
                                 }

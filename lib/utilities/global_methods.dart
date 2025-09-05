@@ -53,7 +53,7 @@ getImageToShow({
           : const AssetImage(AssetsManager.userImage);
 }
 
-// picp image from gallery or camera
+
 Future<File?> pickImage({
   required bool fromCamera,
   required Function(String) onFail,

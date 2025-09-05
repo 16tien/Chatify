@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Nhập Email
+                // Email Text
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // Nhập Mật khẩu
+                // Pw Text
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // Xác nhận Mật khẩu
+                // Pw confirm text
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Nút đăng ký
+                // button sign in
                 authProvider.isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
