@@ -1,27 +1,27 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:chat_app/authentication/landing_screen.dart';
-import 'package:chat_app/authentication/login_screen.dart';
-import 'package:chat_app/authentication/register_screen.dart';
-import 'package:chat_app/authentication/user_information_screen.dart';
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/firebase_options.dart';
-import 'package:chat_app/main_screen/chat_screen.dart';
-import 'package:chat_app/main_screen/friend_requests_screen.dart';
-import 'package:chat_app/main_screen/friends_screen.dart';
-import 'package:chat_app/main_screen/group_information_screen.dart';
-import 'package:chat_app/main_screen/group_settings_screen.dart';
-import 'package:chat_app/main_screen/home_screen.dart';
-import 'package:chat_app/main_screen/profile_screen.dart';
-import 'package:chat_app/providers/authentication_provider.dart';
-import 'package:chat_app/providers/chat_provider.dart';
-import 'package:chat_app/providers/group_provider.dart';
-import 'package:chat_app/utilities/global_methods.dart';
+import 'package:chat_app/features/authentication/presentation/screens/landing_screen.dart';
+import 'package:chat_app/features/authentication/presentation/screens/login_screen.dart';
+import 'package:chat_app/features/authentication/presentation/screens/register_screen.dart';
+import 'package:chat_app/features/authentication/presentation/screens/user_information_screen.dart';
+import 'package:chat_app/core/constants/constants.dart';
+import 'package:chat_app/features/chat/presentation/screens/chat_screen.dart';
+import 'package:chat_app/features/friends/presentation/screens/friend_requests_screen.dart';
+import 'package:chat_app/features/friends/presentation/screens/friends_screen.dart';
+import 'package:chat_app/features/groups/presentation/screens/group_information_screen.dart';
+import 'package:chat_app/features/groups/presentation/screens/group_settings_screen.dart';
+import 'package:chat_app/features/profile/presentation/screens/home_screen.dart';
+import 'package:chat_app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:chat_app/features/authentication/presentation/viewmodels/authentication_provider.dart';
+import 'package:chat_app/features/chat/presentation/viewmodels/chat_provider.dart';
+import 'package:chat_app/features/groups/presentation/viewmodels/group_provider.dart';
+import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'notifycation/notification_service.dart';
+import 'core/services/firebase_options.dart';
+import 'core/services/notification_service.dart';
 
 
 void main() async {
