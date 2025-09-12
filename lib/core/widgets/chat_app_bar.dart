@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../features/calls/presentation/screens/calling_screen.dart';
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
 
@@ -74,48 +73,6 @@ class _ChatAppBarState extends State<ChatAppBar> {
                 ),
               ],
             ),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.call),
-              onPressed: () async {
-                final authProvider = context.read<AuthenticationProvider>();
-                final currentUserId = authProvider.uid!;
-                final currentUserName = authProvider.userModel!.name;
-
-                final receiverId = userModel.uid;
-                final receiverName = userModel.name;
-                final callId = '${currentUserId}$receiverId';
-
-                final callModel = {
-                  'callId': callId,
-                  'callerId': currentUserId,
-                  'callerName': currentUserName,
-                  'receiverId': receiverId,
-                  'receiverName': receiverName,
-                  'status': 'ringing',
-                  'timestamp': FieldValue.serverTimestamp(),
-                };
-
-                // 1. Lưu vào Firestore
-                await FirebaseFirestore.instance
-                    .collection('calls')
-                    .doc(callId)
-                    .set(callModel);
-                await context.read<AuthenticationProvider>().sendCallRequest(receiverId);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CallingScreen(
-                      callId: callId,
-                      userId: currentUserId,
-                      isCaller: true,
-                      receiverName: receiverName,
-                    ),
-                  ),
-                );
-              },
-            )
-
           ],
         );
       },
