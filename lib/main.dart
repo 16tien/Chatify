@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
         initialRoute: Constants.landingScreen,
         routes: {
           Constants.landingScreen: (context) => const LandingScreen(),
-          // Constants.incomingCallScreen: (context) => const IncomingCallScreen(),
           Constants.registerScreen: (context) => const RegisterScreen(),
           Constants.loginScreen: (context) => const LoginScreen(),
           Constants.userInformationScreen: (context) =>

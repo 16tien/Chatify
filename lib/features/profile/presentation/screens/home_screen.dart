@@ -13,7 +13,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import '../../../calls/presentation/screens/incoming_call_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     checkPermissions();
     WidgetsBinding.instance.addObserver(this);
     requestNotificationPermissions();
-    initCloudMessaging();
     super.initState();
   }
 
@@ -70,22 +68,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     } else {
       print('User declined or has not accepted permission');
     }
-  }
-
-  void initCloudMessaging() async {
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.data['type'] == 'call') {
-        final callId = message.data['callId'] ?? '';
-        final callerName = message.data['callerName'] ?? 'Người lạ';
-      print(callerName);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => IncomingCallScreen(callId: callId),
-          ),
-        );
-      }
-    });
   }
 
 // show incoming screen
