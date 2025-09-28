@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/widgets/chat_widget.dart';
+import '../../../chat/presentation/widget/chat_widget.dart';
 
 class PublicGroupScreen extends StatefulWidget {
   const PublicGroupScreen({super.key});

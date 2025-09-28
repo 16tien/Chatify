@@ -7,11 +7,10 @@ import 'package:chat_app/features/authentication/presentation/viewmodels/authent
 import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../core/widgets/info_details_card.dart';
+import '../../../../core/utils/notification_service.dart';
+import '../../../groups/presentation/widget/info_details_card.dart';
 import '../../../../core/widgets/my_app_bar.dart';
-import '../../../../core/widgets/settings_list_tile.dart';
-
+import '../../../groups/presentation/widget/settings_list_tile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -23,18 +22,13 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool isDarkMode = false;
 
-  // get the saved theme mode
   void getThemeMode() async {
-    // get the saved theme mode
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
-    // check if the saved theme mode is dark
     if (savedThemeMode == AdaptiveThemeMode.dark) {
-      // set the isDarkMode to true
       setState(() {
         isDarkMode = true;
       });
     } else {
-      // set the isDarkMode to false
       setState(() {
         isDarkMode = false;
       });
@@ -49,7 +43,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // get user data from arguments
     final uid = ModalRoute.of(context)!.settings.arguments as String;
     final authProvider = context.watch<AuthenticationProvider>();
     bool isMyProfile = uid == authProvider.uid;
@@ -81,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .userStream(userID: uid),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text('Something went wrong'));
+            return const Center(child: Text('Có gì đó sai sai...'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,7 +118,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               icon: Icons.person,
                               iconContainerColor: Colors.deepPurple,
                               onTap: () {
-                                // navigate to account settings
                               },
                             ),
 
@@ -133,8 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               title: 'Thông báo',
                               icon: Icons.notifications,
                               iconContainerColor: Colors.red,
-                              onTap: () {
-                                  authProvider.sendPushNotification('4liYyFoekSeStSL51neHcF8SPJA3', "hellooo", "xin chao");
+                              onTap: () async {
+                                await NotificationService().sendPushNotification('4liYyFoekSeStSL51neHcF8SPJA3', "Tin nhắn",  'hhihi');
                               },
                             ),
                           ],
@@ -149,7 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               icon: Icons.help,
                               iconContainerColor: Colors.yellow,
                               onTap: () {
-                                // navigate to account settings
                               },
                             ),
                             SettingsListTile(
@@ -157,7 +148,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               icon: Icons.share,
                               iconContainerColor: Colors.blue,
                               onTap: () {
-                                // navigate to account settings
                               },
                             ),
                           ],
@@ -167,7 +157,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Card(
                         child: ListTile(
                           contentPadding: const EdgeInsets.only(
-                            // added padding for the list tile
                             left: 8.0,
                             right: 8.0,
                           ),
@@ -195,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onChanged: (value) {
                                 setState(() {
                                   isDarkMode = value;
-                                }); // check if the value is true
+                                });
                                 if (value) {
                                   AdaptiveTheme.of(context)
                                       .setDark();
@@ -222,9 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   textAction: 'Đăng xuất',
                                   onActionTap: (value, updatedText) async {
                                     if (value) {
-                                      // logout
                                       await context.read<AuthenticationProvider>().logout();
-                                      // Đảm bảo rằng Navigator chỉ được gọi khi context còn hợp lệ
                                       if (context.mounted) {
                                         Navigator.pop(context);
                                         Navigator.pushNamedAndRemoveUntil(

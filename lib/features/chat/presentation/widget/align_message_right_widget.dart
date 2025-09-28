@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_reactions/widgets/stacked_reactions.dart';
 import 'package:provider/provider.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 import 'display_message_type.dart';
 import 'message_reply_preview.dart';
 
@@ -25,7 +25,6 @@ class AlignMessageRightWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final time = formatDate(message.timeSent, [hh, ':', nn, ' ', am]);
     final isReplying = message.repliedTo.isNotEmpty;
-    // get the reations from the list
     final messageReations =
         message.reactions.map((e) => e.split('=')[1]).toList();
     final padding = message.reactions.isNotEmpty
@@ -38,7 +37,6 @@ class AlignMessageRightWidget extends StatelessWidget {
       if (isGroupChat) {
         List<String> isSeenByList = message.isSeenBy;
         if (isSeenByList.contains(uid)) {
-          // remove our uid then check again
           isSeenByList.remove(uid);
         }
         isSeen = isSeenByList.isNotEmpty ? true : false;
@@ -54,7 +52,6 @@ class AlignMessageRightWidget extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: MediaQuery.of(context).size.width * 0.7,
-          //minWidth: MediaQuery.of(context).size.width * 0.3,
         ),
         child: Stack(
           children: [

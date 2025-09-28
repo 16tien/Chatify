@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../enums/enums.dart';
-import '../widgets/friends_list.dart';
+import '../../features/friends/presentation/widget/friends_list.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -182,51 +182,43 @@ Widget messageToShow({required MessageEnum type, required String message}) {
   }
 }
 
-//luu anh
+
 Future<String> storeFileToCloudinary({
   required File file,
-  required String reference, // Giữ lại tham số 'reference' như yêu cầu
+  required String reference,
 }) async {
   try {
     const String cloudName = 'dzpnecose';
 
-    // Kiểm tra loại tệp (image/video) dựa trên phần mở rộng
     String fileExtension = file.path.split('.').last.toLowerCase();
     String resourceType = (fileExtension == 'mp4' ||
             fileExtension == 'mov' ||
             fileExtension == 'avi' ||
             fileExtension == 'webm')
-        ? 'video' // Nếu là video
-        : 'image'; // Nếu là hình ảnh
+        ? 'video'
+        : 'image';
 
-    // URL API của Cloudinary
     final Uri uploadUrl = Uri.parse(
         'https://api.cloudinary.com/v1_1/$cloudName/$resourceType/upload');
 
-    // Chuẩn bị request multipart để upload
     var request = http.MultipartRequest('POST', uploadUrl);
 
-    // Các thông tin cần thiết
     request.fields['upload_preset'] = 'ml_default';
     request.fields['folder'] =
-        'user_files'; // Thư mục lưu trữ (có thể thay đổi)
+        'user_files';
 
-    // Thêm tệp vào request
     request.files.add(await http.MultipartFile.fromPath(
       'file',
       file.path,
       filename: reference,
     ));
 
-    // Gửi request
     var response = await request.send();
 
-    // Xử lý phản hồi
     if (response.statusCode == 200) {
       var responseData = await response.stream.bytesToString();
       var data = jsonDecode(responseData);
 
-      // Trả về URL của tệp đã tải lên
       return data['secure_url'];
     } else {
       throw Exception('Failed to upload file: ${response.reasonPhrase}');
@@ -237,7 +229,6 @@ Future<String> storeFileToCloudinary({
   }
 }
 
-// animated dialog
 void showMyAnimatedDialog({
   required BuildContext context,
   required String title,
@@ -311,7 +302,6 @@ void showMyAnimatedDialog({
   );
 }
 
-// show bottom sheet with the list of all app users to add them to the group
 void showAddMembersBottomSheet({
   required BuildContext context,
   required List<String> groupMembersUIDs,
@@ -322,7 +312,6 @@ void showAddMembersBottomSheet({
       return PopScope(
         onPopInvoked: (bool didPop) async {
           if (!didPop) return;
-          // do something when the bottom sheet is closed.
           await context.read<GroupProvider>().removeTempLists(isAdmins: false);
         },
         child: SizedBox(

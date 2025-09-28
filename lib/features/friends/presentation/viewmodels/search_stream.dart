@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/widgets/chat_widget.dart';
+import '../../../chat/presentation/widget/chat_widget.dart';
 
 class SearchStream extends StatelessWidget {
   const SearchStream({
@@ -26,7 +26,7 @@ class SearchStream extends StatelessWidget {
           builder: (builderContext, snapshot) {
             if (snapshot.hasError) {
               return const Center(
-                child: Text('Something went wrong'),
+                child: Text('...'),
               );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -43,7 +43,7 @@ class SearchStream extends StatelessWidget {
 
             if (results.isEmpty) {
               return const Center(
-                child: Text('No chats found'),
+                child: Text('Không tìm thấy đoạn trò chuyện'),
               );
             }
 
@@ -73,7 +73,7 @@ class SearchStream extends StatelessWidget {
               );
             }
             return const Center(
-              child: Text('No chats found'),
+              child: Text('...'),
             );
           });
     }));

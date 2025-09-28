@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_app/core/widgets/video_player_widget.dart';
+import 'package:chat_app/features/chat/presentation/widget/video_player_widget.dart';
 import 'package:flutter/material.dart';
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 import 'audio_player_widget.dart';
 
 class DisplayMessageType extends StatelessWidget {
@@ -51,10 +51,10 @@ class DisplayMessageType extends StatelessWidget {
           return isReply
               ? const Icon(Icons.video_collection)
               : VideoPlayerWidget(
-                  videoUrl: message, // Đường dẫn video
-                  color: color, // Màu sắc cho icon play/pause
+                  videoUrl: message,
+                  color: color,
                   viewOnly:
-                      viewOnly, // Trạng thái chỉ xem hoặc có thể điều khiển video
+                      viewOnly,
                 );
 
         case MessageEnum.audio:

@@ -1,4 +1,4 @@
-import 'package:chat_app/core/widgets/unread_message_counter.dart';
+import 'package:chat_app/features/chat/presentation/widget/unread_message_counter.dart';
 import 'package:chat_app/features/groups/data/models/group_model.dart';
 import 'package:chat_app/features/chat/data/last_message_model.dart';
 import 'package:chat_app/features/authentication/presentation/viewmodels/authentication_provider.dart';

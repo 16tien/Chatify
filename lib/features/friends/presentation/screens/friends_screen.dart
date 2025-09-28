@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/enums/enums.dart';
-import '../../../../core/widgets/friends_list.dart';
+import '../widget/friends_list.dart';
 import '../../../../core/widgets/my_app_bar.dart';
 
 class FriendsScreen extends StatefulWidget {

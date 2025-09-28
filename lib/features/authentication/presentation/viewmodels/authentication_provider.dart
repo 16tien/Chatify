@@ -309,29 +309,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .snapshots();
   }
 
-  Future<void> sendFriendRequest({
-    required String friendID,
-  }) async {
-    try {
-      // add our uid to friends request list
-      await _firestore.collection(Constants.users).doc(friendID).update({
-        Constants.friendRequestsUIDs: FieldValue.arrayUnion([_uid]),
-      });
-
-      // add friend uid to our friend requests sent list
-      await _firestore.collection(Constants.users).doc(_uid).update({
-        Constants.sentFriendRequestsUIDs: FieldValue.arrayUnion([friendID]),
-      });
-
-      // Gửi thông báo cho người nhận yêu cầu kết bạn
-      await sendPushNotification(friendID, 'Bạn nhận được lời mời kết bạn',
-          'Bạn có một lời mời kết bạn từ $_uid');
-    } on FirebaseException catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-  }
 
   Future<void> cancleFriendRequest({required String friendID}) async {
     try {
@@ -704,105 +681,6 @@ class AuthenticationProvider extends ChangeNotifier {
     // Lấy token từ credentials
     var client = await clientViaServiceAccount(credentials, scopes);
     return client.credentials.accessToken.data;
-  }
-
-  Future<void> sendPushNotification(
-      String friendID, String title, String body) async {
-    String bearerToken =
-        await getBearerToken();
-    String? token = await getTokenByUID(friendID);
-    final Map<String, dynamic> message = {
-      "message": {
-        "token": token,
-        "notification": {
-          "title": title,
-          "body": body,
-        },
-        "android": {
-          "priority": "HIGH",
-          "notification": {
-            "channel_id": "chat_channel",
-            "sound": "custom_sound",
-            "click_action": "FLUTTER_NOTIFICATION_CLICK"
-          }
-        },
-        "data": {
-          "screen": "chat",
-          "chatId": "12345",
-          "senderId": "67890",
-          "senderName": "Alice"
-        }
-      }
-    };
-
-    final response = await http.post(
-      Uri.parse(
-          'https://fcm.googleapis.com/v1/projects/flutterchat-e84e9/messages:send'),
-      headers: {
-        'Authorization': 'Bearer $bearerToken',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(message),
-    );
-
-    if (response.statusCode == 200) {
-      print("Notification sent successfully!");
-    } else {
-      print("Failed to send notification: ${response.body}");
-    }
-  }
-
-  Future<void> sendCallRequest(String receiverId) async {
-    _uid = _auth.currentUser!.uid;
-    String bearerToken =
-        await getBearerToken();
-    String? token = await getTokenByUID(receiverId);
-    final Map<String, dynamic> message = {
-      "message": {
-        "token": token,
-        "data": {
-          "type": "call",
-          "callerId": _uid,
-          "callId":_uid.toString() + receiverId.toString(),
-        },
-      }
-    };
-
-    final response = await http.post(
-      Uri.parse(
-          'https://fcm.googleapis.com/v1/projects/flutterchat-e84e9/messages:send'),
-      headers: {
-        'Authorization': 'Bearer $bearerToken',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(message),
-    );
-
-    if (response.statusCode == 200) {
-      print("Notification sent successfully!");
-    } else {
-      print("Failed to send notification: ${response.body}");
-    }
-  }
-
-  Future<String?> getTokenByUID(String uid) async {
-    try {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(uid)
-          .get();
-
-      if (userDoc.exists) {
-        String token = userDoc['token'];
-        return token;
-      } else {
-        print("User not found!");
-        return null;
-      }
-    } catch (e) {
-      print('Error: $e');
-      return null;
-    }
   }
 
   Future<void> signUpWithEmailAndPassword({

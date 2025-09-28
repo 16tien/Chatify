@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'core/services/firebase_options.dart';
-import 'core/services/notification_service.dart';
+import 'core/utils/notification_service.dart';
 
 
 void main() async {

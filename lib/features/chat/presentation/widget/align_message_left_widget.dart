@@ -5,7 +5,7 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_reactions/widgets/stacked_reactions.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 import 'display_message_type.dart';
 import 'message_reply_preview.dart';
 

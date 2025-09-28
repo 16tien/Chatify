@@ -1,22 +1,23 @@
 import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import '../utils/global_methods.dart';
+import 'package:googleapis_auth/auth_io.dart';
+import 'package:http/http.dart' as http;
+import 'global_methods.dart';
 import '../constants/constants.dart';
 
-/// Plugin local notifications
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 FlutterLocalNotificationsPlugin();
 
-/// Background handler FCM
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
 }
 
-/// Notification Service (singleton)
 class NotificationService {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
@@ -24,7 +25,6 @@ class NotificationService {
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  /// Init notifications
   Future<void> init() async {
     // Request permission iOS
     await _messaging.requestPermission();
@@ -40,13 +40,11 @@ class NotificationService {
 
     // Background → tap vào FCM notification
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint("📲 BACKGROUND tapped: ${message.data}");
     });
 
     // App killed → mở bằng notification
     final initialMessage = await _messaging.getInitialMessage();
     if (initialMessage != null) {
-      print("📲 Opened from terminated: ${initialMessage.data}");
       _navigateToScreen(
         initialMessage.data['screen'] ?? '',
         initialMessage.data,
@@ -54,7 +52,6 @@ class NotificationService {
     }
   }
 
-  /// Setup local notification channel
   Future<void> _setupLocalNotification() async {
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidInit);
@@ -84,10 +81,8 @@ class NotificationService {
         ?.createNotificationChannel(channel);
   }
 
-  /// Handle FCM in foreground
+  // Handle FCM in foreground
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    debugPrint("📩 Foreground message: ${message.data}");
-
     final data = message.data;
     final title = data['title'] ?? 'No title';
     final body = data['body'] ?? 'No body';
@@ -106,12 +101,12 @@ class NotificationService {
           sound: RawResourceAndroidNotificationSound('custom_sound'),
         ),
       ),
-      payload: jsonEncode(data), // 👈 dùng để xử lý khi tap
+      payload: jsonEncode(data),
     );
   }
 
 
-  /// Navigate based on screen key
+  // Navigate based on screen key
   void _navigateToScreen(String screen, Map<String, dynamic> data) {
     switch (screen) {
       case 'chat':
@@ -128,6 +123,81 @@ class NotificationService {
         break;
       default:
         debugPrint("⚠️ Unknown screen: $screen");
+    }
+  }
+  Future<void> sendPushNotification(
+      String friendID, String title, String body) async {
+    String bearerToken =
+    await getBearerToken();
+    String? token = await getTokenByUID(friendID);
+    final Map<String, dynamic> message = {
+      "message": {
+        "token": token,
+        "notification": {
+          "title": title,
+          "body": body,
+        },
+        "android": {
+          "priority": "HIGH",
+          "notification": {
+            "channel_id": "chat_channel",
+            "sound": "custom_sound",
+            "click_action": "FLUTTER_NOTIFICATION_CLICK"
+          }
+        },
+        "data": {
+          "screen": "chat",
+        }
+      }
+    };
+
+    final response = await http.post(
+      Uri.parse(
+          'https://fcm.googleapis.com/v1/projects/flutterchat-e84e9/messages:send'),
+      headers: {
+        'Authorization': 'Bearer $bearerToken',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(message),
+    );
+
+    if (response.statusCode == 200) {
+      print("Notification sent successfully!");
+    } else {
+      print("Failed to send notification: ${response.body}");
+    }
+  }
+  Future<String> getBearerToken() async {
+
+    String jsonString = await rootBundle.loadString(
+        'assets/flutterchat-e84e9-firebase-adminsdk-8rkwu-a86c582c6e.json');
+    Map<String, dynamic> credentialsJson = jsonDecode(jsonString);
+
+    var credentials = ServiceAccountCredentials.fromJson(credentialsJson);
+
+    var scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
+
+    var client = await clientViaServiceAccount(credentials, scopes);
+    return client.credentials.accessToken.data;
+  }
+
+  Future<String?> getTokenByUID(String uid) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection(Constants.users)
+          .doc(uid)
+          .get();
+
+      if (userDoc.exists) {
+        String token = userDoc[Constants.token];
+        return token;
+      } else {
+        print("User not found!");
+        return null;
+      }
+    } catch (e) {
+      print('Error: $e');
+      return null;
     }
   }
 

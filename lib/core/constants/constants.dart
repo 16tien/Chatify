@@ -90,13 +90,4 @@ class Constants {
 
   static const String changeName = 'changeName';
   static const String changeDesc = 'changeDesc';
-  static const int appId = 1966915086;
-  static const String appSign= 'f2b84d4461357142a31adb0ba14084324ebaa9d445f18994d20b4f338730a5ac';
-  // notification
-  static const String notificationType = 'notificationType';
-  static const String groupChatNotification = 'groupChatNotification';
-  static const String chatNotification = 'chatNotification';
-  static const String friendRequestNotification = 'friendRequestNotification';
-  static const String requestReplyNotification = 'requestReplyNotification';
-  static const String groupRequestNotification = 'groupRequestNotification';
 }

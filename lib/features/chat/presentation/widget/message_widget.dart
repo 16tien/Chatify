@@ -1,4 +1,4 @@
-import 'package:chat_app/core/widgets/swipe_to_widget.dart';
+import 'package:chat_app/features/chat/presentation/widget/swipe_to_widget.dart';
 import 'package:chat_app/features/chat/data/message_model.dart';
 import 'package:flutter/material.dart';
 

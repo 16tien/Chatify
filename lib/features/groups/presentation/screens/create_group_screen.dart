@@ -9,11 +9,11 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/enums/enums.dart';
-import '../../../../core/widgets/display_user_image.dart';
-import '../../../../core/widgets/friends_list.dart';
-import '../../../../core/widgets/group_type_list_tile.dart';
+import '../widget/display_user_image.dart';
+import '../../../friends/presentation/widget/friends_list.dart';
+import '../widget/group_type_list_tile.dart';
 import '../../../../core/widgets/my_app_bar.dart';
-import '../../../../core/widgets/settings_list_tile.dart';
+import '../widget/settings_list_tile.dart';
 
 class CreateGroupScreen extends StatefulWidget {
   const CreateGroupScreen({super.key});

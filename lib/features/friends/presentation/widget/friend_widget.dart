@@ -6,7 +6,7 @@ import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 
 class FriendWidget extends StatelessWidget {
   const FriendWidget({

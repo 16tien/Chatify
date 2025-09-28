@@ -11,7 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
+import '../../../../core/utils/notification_service.dart';
 import 'message_reply_preview.dart';
 
 class BottomChatField extends StatefulWidget {
@@ -243,6 +244,7 @@ class _BottomChatFieldState extends State<BottomChatField> {
         onError: (error) {
           showSnackBar(context, error);
         });
+     NotificationService().sendPushNotification(widget.contactUID, "Tin nhắn",  currentUser.name + ": " + _textEditingController.text);
   }
 
   @override

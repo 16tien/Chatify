@@ -8,6 +8,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_reactions/flutter_chat_reactions.dart';
+import 'package:flutter_chat_reactions/utilities/default_data.dart';
 import 'package:flutter_chat_reactions/utilities/hero_dialog_route.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -58,7 +59,7 @@ class _ChatListState extends State<ChatList> {
       case 'Copy':
         // copy message to clipboard
         Clipboard.setData(ClipboardData(text: message.message));
-        showSnackBar(context, 'Message copied to clipboard');
+        showSnackBar(context, 'Tin nhắn đã được sao chép');
         break;
       case 'Delete':
         final currentUserId =
@@ -116,7 +117,7 @@ class _ChatListState extends State<ChatList> {
                     if (chatProvider.isLoading) const LinearProgressIndicator(),
                     ListTile(
                       leading: const Icon(Icons.delete),
-                      title: const Text('Delete for me'),
+                      title: const Text('Xóa phía tôi'),
                       onTap: chatProvider.isLoading
                           ? null
                           : () async {
@@ -137,7 +138,7 @@ class _ChatListState extends State<ChatList> {
                     isSenderOrAdmin
                         ? ListTile(
                             leading: const Icon(Icons.delete_forever),
-                            title: const Text('Delete for everyone'),
+                            title: const Text('Xóa cho tất cả'),
                             onTap: chatProvider.isLoading
                                 ? null
                                 : () async {
@@ -158,7 +159,7 @@ class _ChatListState extends State<ChatList> {
                         : const SizedBox.shrink(),
                     ListTile(
                       leading: const Icon(Icons.cancel),
-                      title: const Text('cancel'),
+                      title: const Text('Hủy'),
                       onTap: chatProvider.isLoading
                           ? null
                           : () {
@@ -195,7 +196,6 @@ class _ChatListState extends State<ChatList> {
         child: EmojiPicker(
           onEmojiSelected: (category, emoji) {
             Navigator.pop(context);
-            // add emoji to message
             sendReactionToMessage(
               reaction: emoji.emoji,
               messageId: messageId,
@@ -219,7 +219,7 @@ class _ChatListState extends State<ChatList> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Center(
-            child: Text('Something went wrong'),
+            child: Text('Có lỗi'),
           );
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -231,7 +231,7 @@ class _ChatListState extends State<ChatList> {
         if (snapshot.data!.isEmpty) {
           return Center(
             child: Text(
-              'Start a conversation',
+              'Bắt đầu hội thoại',
               textAlign: TextAlign.center,
               style: GoogleFonts.openSans(
                   fontSize: 18,
@@ -300,6 +300,7 @@ class _ChatListState extends State<ChatList> {
                           HeroDialogRoute(builder: (context) {
                             return ReactionsDialogWidget(
                               id: element.messageId,
+                              menuItems: DefaultData.menuItems,
                               messageWidget: isMe
                                   ? AlignMessageRightWidget(
                                       message: message,

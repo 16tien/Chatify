@@ -4,12 +4,12 @@ import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/widgets/add_members.dart';
-import '../../../../core/widgets/exit_group_card.dart';
-import '../../../../core/widgets/group_members_card.dart';
-import '../../../../core/widgets/info_details_card.dart';
+import '../widget/add_members.dart';
+import '../widget/exit_group_card.dart';
+import '../widget/group_members_card.dart';
+import '../widget/info_details_card.dart';
 import '../../../../core/widgets/my_app_bar.dart';
-import '../../../../core/widgets/settings_and_media.dart';
+import '../widget/settings_and_media.dart';
 
 class GroupInformationScreen extends StatefulWidget {
   const GroupInformationScreen({super.key});

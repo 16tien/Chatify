@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/enums/enums.dart';
-import '../../../../core/widgets/friend_widget.dart';
+import '../widget/friend_widget.dart';
 
 class AllPeopleSearchStream extends StatelessWidget {
   const AllPeopleSearchStream({

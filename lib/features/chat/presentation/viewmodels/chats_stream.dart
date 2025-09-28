@@ -4,7 +4,7 @@ import 'package:chat_app/features/chat/presentation/viewmodels/chat_provider.dar
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/widgets/chat_widget.dart';
+import '../widget/chat_widget.dart';
 
 class ChatsStream extends StatelessWidget {
   const ChatsStream({
@@ -58,7 +58,7 @@ class ChatsStream extends StatelessWidget {
           );
         }
         return const Center(
-          child: Text('Hãy gửi một tin nhắn'),
+          child: Text(''),
         );
       },
     );

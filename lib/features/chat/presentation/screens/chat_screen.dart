@@ -1,9 +1,9 @@
 import 'package:chat_app/core/constants/constants.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/widgets/botton_chat_field.dart';
-import '../../../../core/widgets/chat_app_bar.dart';
-import '../../../../core/widgets/chat_list.dart';
-import '../../../../core/widgets/group_chat_app_bar.dart';
+import '../widget/botton_chat_field.dart';
+import '../widget/chat_app_bar.dart';
+import '../widget/chat_list.dart';
+import '../../../groups/presentation/widget/group_chat_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});

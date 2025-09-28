@@ -26,7 +26,6 @@ class GroupStatusWidget extends StatelessWidget {
           onTap: !isAdmin
               ? null
               : () {
-                  // show dialog to change group type
                   showMyAnimatedDialog(
                     context: context,
                     title: 'Thay đổi riêng tư',
@@ -35,7 +34,6 @@ class GroupStatusWidget extends StatelessWidget {
                     textAction: 'Thay đổi',
                     onActionTap: (value, updatedText) {
                       if (value) {
-                        // change group type
                         groupProvider.changeGroupType();
                       }
                     },
@@ -107,13 +105,11 @@ class FriendsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // friends button
     Widget buildFriendsButton() {
       if (currentUser.uid == userModel.uid &&
           userModel.friendsUIDs.isNotEmpty) {
         return MyElevatedButton(
           onPressed: () {
-            // navigate to friends screen
             Navigator.pushNamed(
               context,
               Constants.friendsScreen,
@@ -126,10 +122,7 @@ class FriendsButton extends StatelessWidget {
         );
       } else {
         if (currentUser.uid != userModel.uid) {
-          // show cancle friend request button if the user sent us friend request
-          // else show send friend request button
           if (userModel.friendRequestsUIDs.contains(currentUser.uid)) {
-            // show send friend request button
             return MyElevatedButton(
               onPressed: () async {
                 await context
@@ -167,7 +160,6 @@ class FriendsButton extends StatelessWidget {
               children: [
                 MyElevatedButton(
                   onPressed: () async {
-                    // show unfriend dialog to ask the user if he is sure to unfriend
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -189,7 +181,6 @@ class FriendsButton extends StatelessWidget {
                           TextButton(
                             onPressed: () async {
                               Navigator.pop(context);
-                              // remove friend
                               await context
                                   .read<AuthenticationProvider>()
                                   .removeFriend(friendID: userModel.uid)
@@ -206,14 +197,12 @@ class FriendsButton extends StatelessWidget {
                   },
                   label: 'Xóa bạn bè',
                   width: MediaQuery.of(context).size.width * 0.3,
-                  // Giảm width cho nút Unfriend
                   backgroundColor: Colors.deepPurple,
                   textColor: Colors.white,
                 ),
                 const SizedBox(width: 10),
                 MyElevatedButton(
                   onPressed: () async {
-                    // navigate to chat screen
                     Navigator.pushNamed(context, Constants.chatScreen,
                         arguments: {
                           Constants.contactUID: userModel.uid,
@@ -224,7 +213,6 @@ class FriendsButton extends StatelessWidget {
                   },
                   label: 'Trò chuyện',
                   width: MediaQuery.of(context).size.width * 0.3,
-                  // Giảm width cho nút Chat
                   backgroundColor: Theme.of(context).cardColor,
                   textColor: Theme.of(context).colorScheme.primary,
                 ),
@@ -233,10 +221,7 @@ class FriendsButton extends StatelessWidget {
           } else {
             return MyElevatedButton(
               onPressed: () async {
-                await context
-                    .read<AuthenticationProvider>()
-                    .sendFriendRequest(friendID: userModel.uid)
-                    .whenComplete(() {});
+               
               },
               label: 'Gửi yêu cầu ',
               width: MediaQuery.of(context).size.width * 0.7,
@@ -266,7 +251,6 @@ class FriendRequestButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // friend request button
     Widget buildFriendRequestButton() {
       if (currentUser.uid == userModel.uid &&
           userModel.friendRequestsUIDs.isNotEmpty) {
@@ -276,7 +260,6 @@ class FriendRequestButton extends StatelessWidget {
             backgroundColor: Colors.orangeAccent,
             child: IconButton(
               onPressed: () {
-                // navigate to friend requests screen
                 Navigator.pushNamed(
                   context,
                   Constants.friendRequestsScreen,
@@ -290,7 +273,7 @@ class FriendRequestButton extends StatelessWidget {
           ),
         );
       } else {
-        // not in our profile
+
         return const SizedBox.shrink();
       }
     }
@@ -311,16 +294,11 @@ class GetRequestWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // get requestWidget
     Widget getRequestWidget() {
-      // check if user is admin
       if (isAdmin) {
-        // chec if there is any request
         if (groupProvider.groupModel.awaitingApprovalUIDs.isNotEmpty) {
           return InkWell(
             onTap: () {
-              // navigate to add members screen
-              // navigate to friend requests screen
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return FriendRequestScreen(
                   groupId: groupProvider.groupModel.groupId,
@@ -369,7 +347,6 @@ class MyElevatedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget buildElevatedButton() {
       return SizedBox(
-        //width: width,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             elevation: 5,

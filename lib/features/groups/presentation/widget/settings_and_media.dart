@@ -1,4 +1,4 @@
-import 'package:chat_app/core/widgets/settings_list_tile.dart';
+import 'package:chat_app/features/groups/presentation/widget/settings_list_tile.dart';
 import 'package:chat_app/features/groups/presentation/screens/group_settings_screen.dart';
 import 'package:chat_app/features/groups/presentation/viewmodels/group_provider.dart';
 import 'package:chat_app/core/utils/global_methods.dart';

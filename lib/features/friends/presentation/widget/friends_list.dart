@@ -3,7 +3,7 @@ import 'package:chat_app/features/authentication/presentation/viewmodels/authent
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 import 'friend_widget.dart';
 
 class FriendsList extends StatelessWidget {

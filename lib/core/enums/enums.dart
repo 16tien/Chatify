@@ -17,7 +17,6 @@ enum GroupType {
   public,
 }
 
-// extension convertMessageEnumToString on String
 extension MessageEnumExtension on String {
   MessageEnum toMessageEnum() {
     switch (this) {

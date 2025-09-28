@@ -1,5 +1,5 @@
 import 'package:chat_app/core/constants/constants.dart';
-import 'package:chat_app/core/widgets/profile_widgets.dart';
+import 'package:chat_app/features/profile/presentation/widget/profile_widgets.dart';
 import 'package:chat_app/features/authentication/data/user_model.dart';
 import 'package:chat_app/features/authentication/presentation/viewmodels/authentication_provider.dart';
 import 'package:chat_app/features/groups/presentation/viewmodels/group_provider.dart';

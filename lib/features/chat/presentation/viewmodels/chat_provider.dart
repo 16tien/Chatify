@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/core/constants/constants.dart';
+import 'package:chat_app/core/utils/notification_service.dart';
 import 'package:chat_app/features/chat/data/last_message_model.dart';
 import 'package:chat_app/features/chat/data/message_model.dart';
 import 'package:chat_app/features/chat/data/message_reply_model.dart';
@@ -93,6 +94,7 @@ class ChatProvider extends ChangeNotifier {
           Constants.senderUID: sender.uid,
           Constants.messageType: messageType.name,
         });
+
 
         setLoading(false);
         onSuccess();

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/enums/enums.dart';
-import '../../../../core/widgets/friend_widget.dart';
-import '../../../../core/widgets/settings_list_tile.dart';
-import '../../../../core/widgets/settings_switch_list_tile.dart';
+import '../../../friends/presentation/widget/friend_widget.dart';
+import '../widget/settings_list_tile.dart';
+import '../../../chat/presentation/widget/settings_switch_list_tile.dart';
 
 class GroupSettingsScreen extends StatefulWidget {
   const GroupSettingsScreen({super.key});

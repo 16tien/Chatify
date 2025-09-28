@@ -5,7 +5,7 @@ import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../core/widgets/display_user_image.dart';
+import '../../../groups/presentation/widget/display_user_image.dart';
 import '../../../../core/widgets/my_app_bar.dart';
 
 class UserInformationScreen extends StatefulWidget {

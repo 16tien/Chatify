@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../enums/enums.dart';
+import '../../../../core/enums/enums.dart';
 import 'display_message_type.dart';
 
 class MessageReplyPreview extends StatelessWidget {
@@ -117,7 +117,7 @@ class MessageReplyPreview extends StatelessWidget {
     if (replyMessageModel != null) {
       bool isMe = replyMessageModel!.isMe;
       return Text(
-        isMe ? 'You' : replyMessageModel!.senderName,
+        isMe ? 'Bạn' : replyMessageModel!.senderName,
         style: GoogleFonts.openSans(
           fontWeight: FontWeight.bold,
           color: Colors.blue,

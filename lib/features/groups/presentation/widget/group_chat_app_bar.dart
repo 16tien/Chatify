@@ -5,7 +5,6 @@ import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'group_members.dart';
 
 class GroupChatAppBar extends StatefulWidget {
