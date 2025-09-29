@@ -22,25 +22,20 @@ class InfoDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // get current user
     final authProvider = context.read<AuthenticationProvider>();
     final uid = authProvider.userModel!.uid;
     final phoneNumber = authProvider.userModel!.email;
-    // get profile image
     final profileImage = userModel != null
         ? userModel!.image
         : groupProvider!.groupModel.groupImage;
-    // get profile name
     final profileName = userModel != null
         ? userModel!.name
         : groupProvider!.groupModel.groupName;
 
-    // get group description
     final aboutMe = userModel != null
         ? userModel!.aboutMe
         : groupProvider!.groupModel.groupDescription;
 
-    // get isGroup
     final isGroup = userModel != null ? false : true;
 
     Widget getEditWidget(
@@ -48,7 +43,6 @@ class InfoDetailsCard extends StatelessWidget {
       String content,
     ) {
       if (isGroup) {
-        // check if user is admin
         if (isAdmin!) {
           return InkWell(
             onTap: () {

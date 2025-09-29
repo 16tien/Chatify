@@ -24,7 +24,7 @@ class _GroupChatAppBarState extends State<GroupChatAppBar> {
           context.read<GroupProvider>().groupStream(groupId: widget.groupId),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          return const Center(child: Text('Something went wrong'));
+          return const Center(child: Text(''));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -36,7 +36,6 @@ class _GroupChatAppBarState extends State<GroupChatAppBar> {
 
         return GestureDetector(
           onTap: () {
-            // navigate to group information screen
             context
                 .read<GroupProvider>()
                 .updateGroupMembersList()
@@ -50,7 +49,6 @@ class _GroupChatAppBarState extends State<GroupChatAppBar> {
                 imageUrl: groupModel.groupImage,
                 radius: 20,
                 onTap: () {
-                  // navigate to group settings screen
                 },
               ),
               const SizedBox(width: 10),

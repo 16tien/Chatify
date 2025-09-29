@@ -22,21 +22,17 @@ class _GroupSettingsScreenState extends State<GroupSettingsScreen> {
     required GroupProvider groupProvider,
     required String uid,
   }) {
-    // check if there are group members
     if (groupProvider.groupMembersList.isEmpty) {
       return 'Để gán vai trò quản trị viên, vui lòng thêm thành viên nhóm vào màn hình trước';
     } else {
       List<String> groupAdminsNames = [];
 
-      // get the list of group admins
       List<UserModel> groupAdminsList = groupProvider.groupAdminsList;
 
-      // get a list of names from the group admins list
       List<String> groupAdminsNamesList = groupAdminsList.map((groupAdmin) {
         return groupAdmin.uid == uid ? 'Bạn' : groupAdmin.name;
       }).toList();
 
-      // add these names to the groupAdminsNames list
       groupAdminsNames.addAll(groupAdminsNamesList);
 
       return groupAdminsNames.length == 2
@@ -50,7 +46,6 @@ class _GroupSettingsScreenState extends State<GroupSettingsScreen> {
   Color getAdminsContainerColor({
     required GroupProvider groupProvider,
   }) {
-    // check if there are group members
     if (groupProvider.groupMembersList.isEmpty) {
       return Theme.of(context).disabledColor;
     } else {
@@ -149,12 +144,10 @@ class _GroupSettingsScreenState extends State<GroupSettingsScreen> {
                             icon: Icons.admin_panel_settings,
                             iconContainerColor: Colors.red,
                             onTap: () {
-                              // check if there are group members
                               if (groupProvider.groupMembersList.isEmpty) {
                                 return;
                               }
                               groupProvider.setEmptyTemps();
-                              // show bottom sheet to select admins
                               showBottomSheet(
                                   context: context,
                                   builder: (context) {

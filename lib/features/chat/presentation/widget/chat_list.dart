@@ -57,7 +57,6 @@ class _ChatListState extends State<ChatList> {
         context.read<ChatProvider>().setMessageReplyModel(messageReply);
         break;
       case 'Copy':
-        // copy message to clipboard
         Clipboard.setData(ClipboardData(text: message.message));
         showSnackBar(context, 'Tin nhắn đã được sao chép');
         break;
@@ -176,7 +175,6 @@ class _ChatListState extends State<ChatList> {
 
   void sendReactionToMessage(
       {required String reaction, required String messageId}) {
-    // get the sender uid
     final senderUID = context.read<AuthenticationProvider>().userModel!.uid;
 
     context.read<ChatProvider>().sendReactionToMessage(
@@ -208,7 +206,6 @@ class _ChatListState extends State<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    // current user uid
     final uid = context.read<AuthenticationProvider>().userModel!.uid;
     return StreamBuilder<List<MessageModel>>(
       stream: context.read<ChatProvider>().getMessagesStream(
@@ -241,7 +238,6 @@ class _ChatListState extends State<ChatList> {
           );
         }
 
-        // automatically scroll to the bottom on new message
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (_scrollController.hasClients) {
             _scrollController.animateTo(
@@ -270,7 +266,6 @@ class _ChatListState extends State<ChatList> {
             itemBuilder: (context, dynamic element) {
               final message = element as MessageModel;
 
-              // check if ita groupChat
               if (widget.groupId.isNotEmpty) {
                 context.read<ChatProvider>().setMessageStatus(
                       currentUserId: uid,
@@ -342,7 +337,6 @@ class _ChatListState extends State<ChatList> {
                         child: MessageWidget(
                           message: element,
                           onRightSwipe: () {
-                            // set the message reply to true
                             final messageReply = MessageReplyModel(
                               message: element.message,
                               senderUID: element.senderUID,
@@ -370,11 +364,9 @@ class _ChatListState extends State<ChatList> {
 
               return secondItem!.compareTo(firstItem!);
             },
-            // optional
             useStickyGroupSeparators: true,
-            // optional
             floatingHeader: true,
-            // optional
+
             order: GroupedListOrder.ASC, // optional
           );
         }

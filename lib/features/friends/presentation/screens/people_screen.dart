@@ -21,7 +21,6 @@ class _PeopleScreenState extends State<PeopleScreen> {
         body: SafeArea(
       child: Column(
         children: [
-          // cupertino search bar
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CupertinoSearchTextField(
@@ -34,7 +33,6 @@ class _PeopleScreenState extends State<PeopleScreen> {
             ),
           ),
 
-          // list of users
           Expanded(
             child: searchQuery.isEmpty
                 ? const Center(

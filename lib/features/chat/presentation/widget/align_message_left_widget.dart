@@ -25,10 +25,8 @@ class AlignMessageLeftWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final time = formatDate(message.timeSent, [hh, ':', nn, ' ', am]);
     final isReplying = message.repliedTo.isNotEmpty;
-    // get the reations from the list
     final messageReations =
         message.reactions.map((e) => e.split('=')[1]).toList();
-    // check if its dark mode
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final padding = message.reactions.isNotEmpty
         ? const EdgeInsets.only(right: 20.0, bottom: 25.0)

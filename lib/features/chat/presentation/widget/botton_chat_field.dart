@@ -10,7 +10,6 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/enums/enums.dart';
 import '../../../../core/utils/notification_service.dart';
 import 'message_reply_preview.dart';
@@ -45,31 +44,26 @@ class _BottomChatFieldState extends State<BottomChatField> {
   bool isSendingAudio = false;
   bool isShowEmojiPicker = false;
 
-  // hide emoji container
   void hideEmojiContainer() {
     setState(() {
       isShowEmojiPicker = false;
     });
   }
 
-  // show emoji container
   void showEmojiContainer() {
     setState(() {
       isShowEmojiPicker = true;
     });
   }
 
-  // show keyboard
   void showKeyBoard() {
     _focusNode.requestFocus();
   }
 
-  // hide keyboard
   void hideKeyNoard() {
     _focusNode.unfocus();
   }
 
-  // toggle emoji and keyboard container
   void toggleEmojiKeyboardContainer() {
     if (isShowEmojiPicker) {
       showKeyBoard();
@@ -96,7 +90,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     super.dispose();
   }
 
-  // check microphone permission
   Future<bool> checkMicrophonePermission() async {
     bool hasPermission = await Permission.microphone.isGranted;
     final status = await Permission.microphone.request();
@@ -109,7 +102,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     return hasPermission;
   }
 
-  // start recording audio
   void startRecording() async {
     final hasPermission = await checkMicrophonePermission();
     if (hasPermission) {
@@ -124,14 +116,12 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
-  // stop recording audio
   void stopRecording() async {
     await _soundRecord!.stop();
     setState(() {
       isRecording = false;
       isSendingAudio = true;
     });
-    // send audio message to firestore
     sendFileMessage(
       messageType: MessageEnum.audio,
     );
@@ -145,13 +135,11 @@ class _BottomChatFieldState extends State<BottomChatField> {
       },
     );
 
-    // crop image
     await cropImage(finalFileImage?.path);
 
     popContext();
   }
 
-  // select a video file from device
   void selectVideo() async {
     File? fileVideo = await pickVideo(
       onFail: (String message) {
@@ -163,7 +151,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
     if (fileVideo != null) {
       filePath = fileVideo.path;
-      // send video message to firestore
       sendFileMessage(
         messageType: MessageEnum.video,
       );
@@ -185,7 +172,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
 
       if (croppedFile != null) {
         filePath = croppedFile.path;
-        // send image message to firestore
         sendFileMessage(
           messageType: MessageEnum.image,
         );
@@ -193,7 +179,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     }
   }
 
-  // send image message to firestore
   void sendFileMessage({
     required MessageEnum messageType,
   }) {
@@ -224,7 +209,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
     );
   }
 
-  // send text message to firestore
   void sendTextMessage() {
     final currentUser = context.read<AuthenticationProvider>().userModel!;
     final chatProvider = context.read<ChatProvider>();
@@ -258,13 +242,10 @@ class _BottomChatFieldState extends State<BottomChatField> {
     final uid = context.read<AuthenticationProvider>().userModel!.uid;
 
     final groupProvider = context.read<GroupProvider>();
-    // check if is admin
     final isAdmin = groupProvider.groupModel.adminsUIDs.contains(uid);
 
-    // chec if is member
     final isMember = groupProvider.groupModel.membersUIDs.contains(uid);
 
-    // check is messages are locked
     final isLocked = groupProvider.groupModel.lockMessages;
     return isAdmin
         ? buildBottomChatField()
@@ -452,7 +433,6 @@ class _BottomChatFieldState extends State<BottomChatField> {
                 ],
               ),
             ),
-            // show emoji container
             isShowEmojiPicker
                 ? SizedBox(
                     height: 280,

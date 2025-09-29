@@ -25,7 +25,6 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
 
   @override
   void initState() {
-    // listen to changes in player state
     audioPlayer.onPlayerStateChanged.listen((event) {
       if (event == PlayerState.playing) {
         setState(() {
@@ -42,14 +41,12 @@ class _AudioPlayerWidgetState extends State<AudioPlayerWidget> {
         });
       }
     });
-    // listen to changes in player position
     audioPlayer.onPositionChanged.listen((newPosition) {
       setState(() {
         position = newPosition;
       });
     });
 
-    // listen to changes in player duration
     audioPlayer.onDurationChanged.listen((newDuration) {
       setState(() {
         duration = newDuration;

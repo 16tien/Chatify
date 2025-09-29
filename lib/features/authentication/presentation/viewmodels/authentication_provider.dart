@@ -266,7 +266,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
     try {
       if (_finalFileImage != null) {
-        // upload image to storage
         String imageUrl = await storeFileToCloudinary(
             file: _finalFileImage!,
             reference: '${Constants.userImages}/${userModel.uid}');
@@ -296,12 +295,10 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  // get user stream
   Stream<DocumentSnapshot> userStream({required String userID}) {
     return _firestore.collection(Constants.users).doc(userID).snapshots();
   }
 
-  // get all users stream
   Stream<QuerySnapshot> getAllUsersStream({required String userID}) {
     return _firestore
         .collection(Constants.users)
@@ -312,12 +309,10 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> cancleFriendRequest({required String friendID}) async {
     try {
-      // remove our uid from friends request list
       await _firestore.collection(Constants.users).doc(friendID).update({
         Constants.friendRequestsUIDs: FieldValue.arrayRemove([_uid]),
       });
 
-      // remove friend uid from our friend requests sent list
       await _firestore.collection(Constants.users).doc(_uid).update({
         Constants.sentFriendRequestsUIDs: FieldValue.arrayRemove([friendID]),
       });
@@ -329,41 +324,33 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<void> acceptFriendRequest({required String friendID}) async {
-    // add our uid to friends list
     await _firestore.collection(Constants.users).doc(friendID).update({
       Constants.friendsUIDs: FieldValue.arrayUnion([_uid]),
     });
 
-    // add friend uid to our friends list
     await _firestore.collection(Constants.users).doc(_uid).update({
       Constants.friendsUIDs: FieldValue.arrayUnion([friendID]),
     });
 
-    // remove our uid from friends request list
     await _firestore.collection(Constants.users).doc(friendID).update({
       Constants.sentFriendRequestsUIDs: FieldValue.arrayRemove([_uid]),
     });
 
-    // remove friend uid from our friend requests sent list
     await _firestore.collection(Constants.users).doc(_uid).update({
       Constants.friendRequestsUIDs: FieldValue.arrayRemove([friendID]),
     });
   }
 
-  // remove friend
   Future<void> removeFriend({required String friendID}) async {
-    // remove our uid from friends list
     await _firestore.collection(Constants.users).doc(friendID).update({
       Constants.friendsUIDs: FieldValue.arrayRemove([_uid]),
     });
 
-    // remove friend uid from our friends list
     await _firestore.collection(Constants.users).doc(_uid).update({
       Constants.friendsUIDs: FieldValue.arrayRemove([friendID]),
     });
   }
 
-  // get a list of friends
   Future<List<UserModel>> getFriendsList(
     String uid,
     List<String> groupMembersUIDs,
@@ -376,7 +363,6 @@ class AuthenticationProvider extends ChangeNotifier {
     List<dynamic> friendsUIDs = documentSnapshot.get(Constants.friendsUIDs);
 
     for (String friendUID in friendsUIDs) {
-      // if groupMembersUIDs list is not empty and contains the friendUID we skip this friend
       if (groupMembersUIDs.isNotEmpty && groupMembersUIDs.contains(friendUID)) {
         continue;
       }
@@ -390,7 +376,6 @@ class AuthenticationProvider extends ChangeNotifier {
     return friendsList;
   }
 
-  // get a list of friend requests
   Future<List<UserModel>> getFriendRequestsList({
     required String uid,
     required String groupId,
@@ -436,20 +421,16 @@ class AuthenticationProvider extends ChangeNotifier {
     return friendRequestsList;
   }
 
-  // update image
   Future<String> updateImage({
     required bool isGroup,
     required String id,
   }) async {
-    // check if file is not null
     if (_finalFileImage == null) {
       return 'Error';
     }
-    // set loading
     _isLoading = true;
 
     try {
-      // get the path
       final String filePath = isGroup
           ? '${Constants.groupImages}/$id'
           : '${Constants.userImages}/$id';
@@ -461,7 +442,6 @@ class AuthenticationProvider extends ChangeNotifier {
 
       if (isGroup) {
         await _updateGroupImage(id, imageUrl);
-        // set file to null
         _finalFileImage = null;
         _isLoading = false;
         notifyListeners();
@@ -469,23 +449,19 @@ class AuthenticationProvider extends ChangeNotifier {
       } else {
         await _updateUserImage(id, imageUrl);
         _userModel!.image = imageUrl;
-        // set file to null
         _finalFileImage = null;
         _isLoading = false;
-        // save user data to share preferences
         await saveUserDataToSharedPreferences();
         notifyListeners();
         return imageUrl;
       }
     } catch (e) {
-      // set loading to false
       _isLoading = false;
       notifyListeners();
       return 'Error';
     }
   }
 
-  // update group image
   Future<void> _updateGroupImage(
     String id,
     String imageUrl,
@@ -496,7 +472,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.groupImage: imageUrl});
   }
 
-  // update user image
   Future<void> _updateUserImage(
     String id,
     String imageUrl,
@@ -507,7 +482,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.image: imageUrl});
   }
 
-  // update name
   Future<String> updateName({
     required bool isGroup,
     required String id,
@@ -536,7 +510,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  // update name
   Future<String> updateStatus({
     required bool isGroup,
     required String id,
@@ -557,7 +530,6 @@ class AuthenticationProvider extends ChangeNotifier {
       await _updateAboutMe(id, newDesc);
 
       _userModel!.aboutMe = newDesc;
-      // save user data to share preferences
       await saveUserDataToSharedPreferences();
       newDesc = '';
       notifyListeners();
@@ -565,7 +537,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  // update groupName
   Future<void> _updateGroupName(String id, String newName) async {
     await _firestore.collection(Constants.groups).doc(id).update({
       Constants.groupName: newName,
@@ -580,7 +551,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.name: newName});
   }
 
-  // update aboutMe
   Future<void> _updateAboutMe(String id, String newDesc) async {
     await _firestore
         .collection(Constants.users)
@@ -588,7 +558,6 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.aboutMe: newDesc});
   }
 
-  // update group desc
   Future<void> _updateGroupDesc(String id, String newDesc) async {
     await _firestore
         .collection(Constants.groups)
@@ -596,34 +565,27 @@ class AuthenticationProvider extends ChangeNotifier {
         .update({Constants.groupDescription: newDesc});
   }
 
-  // generate a new token
   Future<void> generateNewToken() async {
     final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     String? token = await firebaseMessaging.getToken();
 
     log('Token: $token');
 
-    // save token to firestore
     _firestore.collection(Constants.users).doc(_userModel!.uid).update({
       Constants.token: token,
     });
   }
 
   Future logout() async {
-    // clear user token from firestore
     await _firestore.collection(Constants.users).doc(_userModel!.uid).update({
       Constants.token: '',
     });
-    // sign out from firebase auth
     await _auth.signOut();
 
-    //  clear shared preferences
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.clear();
     notifyListeners();
   }
-
-  //luu anh
   Future<String> storeFileToCloudinary({
     required File file,
     required String reference,
@@ -631,32 +593,26 @@ class AuthenticationProvider extends ChangeNotifier {
     try {
       const String cloudName = 'dzpnecose';
 
-      // URL API của Cloudinary
       final Uri uploadUrl =
           Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
 
-      // Chuẩn bị request multipart để upload
       var request = http.MultipartRequest('POST', uploadUrl);
 
-      // Các thông tin cần thiết
       request.fields['upload_preset'] = 'ml_default';
       request.fields['folder'] =
-          'user_images'; // Thư mục lưu trữ ảnh trên Cloudinary
+          'user_images';
       request.files.add(await http.MultipartFile.fromPath(
         'file',
         file.path,
         filename: reference,
       ));
 
-      // Gửi request
       var response = await request.send();
 
-      // Xử lý phản hồi
       if (response.statusCode == 200) {
         var responseData = await response.stream.bytesToString();
         var data = jsonDecode(responseData);
 
-        // Trả về URL ảnh
         return data['secure_url'];
       } else {
         throw Exception('Failed to upload image: ${response.reasonPhrase}');
@@ -667,18 +623,14 @@ class AuthenticationProvider extends ChangeNotifier {
   }
 
   Future<String> getBearerToken() async {
-    // Đọc tệp JSON từ thư mục assets
     String jsonString = await rootBundle.loadString(
         'assets/flutterchat-e84e9-firebase-adminsdk-8rkwu-e0aeed0456.json');
     Map<String, dynamic> credentialsJson = jsonDecode(jsonString);
 
-    // Tạo đối tượng ServiceAccountCredentials từ JSON
     var credentials = ServiceAccountCredentials.fromJson(credentialsJson);
 
-    // Đặt phạm vi truy cập cho Firebase
     var scopes = ['https://www.googleapis.com/auth/firebase.messaging'];
 
-    // Lấy token từ credentials
     var client = await clientViaServiceAccount(credentials, scopes);
     return client.credentials.accessToken.data;
   }

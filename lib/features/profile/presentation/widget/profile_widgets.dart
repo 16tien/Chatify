@@ -115,7 +115,7 @@ class FriendsButton extends StatelessWidget {
               Constants.friendsScreen,
             );
           },
-          label: 'Friends',
+          label: 'Bạn bè',
           width: MediaQuery.of(context).size.width * 0.4,
           backgroundColor: Theme.of(context).cardColor,
           textColor: Theme.of(context).colorScheme.primary,
@@ -146,10 +146,10 @@ class FriendsButton extends StatelessWidget {
                     .acceptFriendRequest(friendID: userModel.uid)
                     .whenComplete(() {
                   showSnackBar(
-                      context, 'You are now friends with ${userModel.name}');
+                      context, 'Bây giờ đã là bạn bè với ${userModel.name}');
                 });
               },
-              label: 'Accept Friend',
+              label: 'Chấp nhận bạn be',
               width: MediaQuery.of(context).size.width * 0.4,
               backgroundColor: Theme.of(context).cardColor,
               textColor: Theme.of(context).colorScheme.primary,

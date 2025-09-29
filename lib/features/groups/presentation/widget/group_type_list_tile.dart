@@ -18,7 +18,6 @@ class GroupTypeListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // capitalize the first letter of the title
     final capitalizedTitle = title[0].toUpperCase() + title.substring(1);
     return RadioListTile<GroupType>(
       value: value,

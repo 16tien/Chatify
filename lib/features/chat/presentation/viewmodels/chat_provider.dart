@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:chat_app/core/constants/constants.dart';
-import 'package:chat_app/core/utils/notification_service.dart';
 import 'package:chat_app/features/chat/data/last_message_model.dart';
 import 'package:chat_app/features/chat/data/message_model.dart';
 import 'package:chat_app/features/chat/data/message_reply_model.dart';
@@ -164,8 +162,6 @@ class ChatProvider extends ChangeNotifier {
       );
 
       if (groupId.isNotEmpty) {
-        // handle group message
-        // handle group message
         await _firestore
             .collection(Constants.groups)
             .doc(groupId)
@@ -268,17 +264,14 @@ class ChatProvider extends ChangeNotifier {
       setLoading(false);
       onSucess();
     } on FirebaseException catch (e) {
-      // set loading to false
       setLoading(false);
       onError(e.message ?? e.toString());
     } catch (e) {
-      // set loading to false
       setLoading(false);
       onError(e.toString());
     }
   }
 
-  // send reaction to message
   Future<void> sendReactionToMessage({
     required String senderUID,
     required String contactUID,
@@ -286,15 +279,11 @@ class ChatProvider extends ChangeNotifier {
     required String reaction,
     required bool groupId,
   }) async {
-    // set loading to true
     setLoading(true);
-    // a reaction is saved as senderUID=reaction
     String reactionToAdd = '$senderUID=$reaction';
 
     try {
-      // 1. check if its a group message
       if (groupId) {
-        // 2. get the reaction list from firestore
         final messageData = await _firestore
             .collection(Constants.groups)
             .doc(contactUID)
@@ -302,12 +291,9 @@ class ChatProvider extends ChangeNotifier {
             .doc(messageId)
             .get();
 
-        // 3. add the meesaage data to messageModel
         final message = MessageModel.fromMap(messageData.data()!);
 
-        // 4. check if the reaction list is empty
         if (message.reactions.isEmpty) {
-          // 5. add the reaction to the message
           await _firestore
               .collection(Constants.groups)
               .doc(contactUID)
@@ -317,21 +303,15 @@ class ChatProvider extends ChangeNotifier {
             Constants.reactions: FieldValue.arrayUnion([reactionToAdd])
           });
         } else {
-          // 6. get UIDs list from reactions list
           final uids = message.reactions.map((e) => e.split('=')[0]).toList();
 
-          // 7. check if the reaction is already added
           if (uids.contains(senderUID)) {
-            // 8. get the index of the reaction
             final index = uids.indexOf(senderUID);
-            // 9. replace the reaction
             message.reactions[index] = reactionToAdd;
           } else {
-            // 10. add the reaction to the list
             message.reactions.add(reactionToAdd);
           }
 
-          // 11. update the message
           await _firestore
               .collection(Constants.groups)
               .doc(contactUID)
@@ -340,8 +320,6 @@ class ChatProvider extends ChangeNotifier {
               .update({Constants.reactions: message.reactions});
         }
       } else {
-        // handle contact message
-        // 2. get the reaction list from firestore
         final messageData = await _firestore
             .collection(Constants.users)
             .doc(senderUID)
@@ -351,12 +329,9 @@ class ChatProvider extends ChangeNotifier {
             .doc(messageId)
             .get();
 
-        // 3. add the meesaage data to messageModel
         final message = MessageModel.fromMap(messageData.data()!);
 
-        // 4. check if the reaction list is empty
         if (message.reactions.isEmpty) {
-          // 5. add the reaction to the message
           await _firestore
               .collection(Constants.users)
               .doc(senderUID)
@@ -368,21 +343,15 @@ class ChatProvider extends ChangeNotifier {
             Constants.reactions: FieldValue.arrayUnion([reactionToAdd])
           });
         } else {
-          // 6. get UIDs list from reactions list
           final uids = message.reactions.map((e) => e.split('=')[0]).toList();
 
-          // 7. check if the reaction is already added
           if (uids.contains(senderUID)) {
-            // 8. get the index of the reaction
             final index = uids.indexOf(senderUID);
-            // 9. replace the reaction
             message.reactions[index] = reactionToAdd;
           } else {
-            // 10. add the reaction to the list
             message.reactions.add(reactionToAdd);
           }
 
-          // 11. update the message to sender firestore location
           await _firestore
               .collection(Constants.users)
               .doc(senderUID)
@@ -392,7 +361,6 @@ class ChatProvider extends ChangeNotifier {
               .doc(messageId)
               .update({Constants.reactions: message.reactions});
 
-          // 12. update the message to contact firestore location
           await _firestore
               .collection(Constants.users)
               .doc(contactUID)
@@ -404,7 +372,6 @@ class ChatProvider extends ChangeNotifier {
         }
       }
 
-      // set loading to false
       setLoading(false);
     } catch (e) {
       if (kDebugMode) {
@@ -413,7 +380,6 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  // get chatsList stream
   Stream<List<LastMessageModel>> getChatsListStream(String userId) {
     return _firestore
         .collection(Constants.users)
@@ -428,15 +394,12 @@ class ChatProvider extends ChangeNotifier {
     });
   }
 
-  // stream messages from chat collection
   Stream<List<MessageModel>> getMessagesStream({
     required String userId,
     required String contactUID,
     required String isGroup,
   }) {
-    // 1. check if its a group message
     if (isGroup.isNotEmpty) {
-      // handle group message
       return _firestore
           .collection(Constants.groups)
           .doc(contactUID)
@@ -448,7 +411,6 @@ class ChatProvider extends ChangeNotifier {
         }).toList();
       });
     } else {
-      // handle contact message
       return _firestore
           .collection(Constants.users)
           .doc(userId)
@@ -469,9 +431,7 @@ class ChatProvider extends ChangeNotifier {
     required String contactUID,
     required bool isGroup,
   }) {
-    // 1. check if its a group message
     if (isGroup) {
-      // handle group message
       return _firestore
           .collection(Constants.groups)
           .doc(contactUID)
@@ -488,7 +448,6 @@ class ChatProvider extends ChangeNotifier {
         return count;
       });
     } else {
-      // handle contact message
       return _firestore
           .collection(Constants.users)
           .doc(userId)
@@ -502,7 +461,6 @@ class ChatProvider extends ChangeNotifier {
     }
   }
 
-  // set message status
   Future<void> setMessageStatus({
     required String currentUserId,
     required String contactUID,

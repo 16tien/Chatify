@@ -168,7 +168,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: CircleAvatar(
-              child: context.watch<GroupProvider>().isSloading
+              child: context.watch<GroupProvider>().isLoading
                   ? const CircularProgressIndicator()
                   : IconButton(
                       onPressed: () {

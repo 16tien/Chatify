@@ -3,8 +3,8 @@ import 'package:chat_app/features/groups/presentation/viewmodels/group_provider.
 import 'package:chat_app/core/utils/global_methods.dart';
 import 'package:flutter/material.dart';
 
-class GoupMembersCard extends StatefulWidget {
-  const GoupMembersCard({
+class GroupMembersCard extends StatefulWidget {
+  const GroupMembersCard({
     super.key,
     required this.isAdmin,
     required this.groupProvider,
@@ -14,10 +14,10 @@ class GoupMembersCard extends StatefulWidget {
   final GroupProvider groupProvider;
 
   @override
-  State<GoupMembersCard> createState() => _GoupMembersCardState();
+  State<GroupMembersCard> createState() => _GroupMembersCardState();
 }
 
-class _GoupMembersCardState extends State<GoupMembersCard> {
+class _GroupMembersCardState extends State<GroupMembersCard> {
   @override
   Widget build(BuildContext context) {
     return Card(

@@ -29,8 +29,6 @@ class _PublicGroupScreenState extends State<PublicGroupScreen> {
             onChanged: (value) {},
           ),
         ),
-
-        // stream builder for private groups
         StreamBuilder<List<GroupModel>>(
           stream:
               context.read<GroupProvider>().getPublicGroupsStream(userId: uid),
@@ -59,7 +57,6 @@ class _PublicGroupScreenState extends State<PublicGroupScreen> {
                       group: groupModel,
                       isGroup: true,
                       onTap: () {
-                        // check if user is already a member of the group
                         if (groupModel.membersUIDs.contains(uid)) {
                           context
                               .read<GroupProvider>()
@@ -79,15 +76,12 @@ class _PublicGroupScreenState extends State<PublicGroupScreen> {
                           return;
                         }
 
-                        // check if request to join settings is enabled
                         if (groupModel.requestToJoin) {
-                          // check if user has already requested to join the group
                           if (groupModel.awaitingApprovalUIDs.contains(uid)) {
                             showSnackBar(context, 'Yêu cầu đã được gửi');
                             return;
                           }
 
-                          // show animation to join group to request to join
                           showMyAnimatedDialog(
                             context: context,
                             title: 'Yêu cầu tham gia',

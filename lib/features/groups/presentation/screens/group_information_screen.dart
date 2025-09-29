@@ -28,7 +28,7 @@ class _GroupInformationScreenState extends State<GroupInformationScreen> {
       builder: (context, groupProvider, child) {
         bool isAdmin = groupProvider.groupModel.adminsUIDs.contains(uid);
 
-        return groupProvider.isSloading
+        return groupProvider.isLoading
             ? const Scaffold(
                 body: Center(
                   child: Column(
@@ -70,7 +70,6 @@ class _GroupInformationScreenState extends State<GroupInformationScreen> {
                         isAdmin: isAdmin,
                         onPressed: () {
                           groupProvider.setEmptyTemps();
-                          // show  bottom sheet to add members
                           showAddMembersBottomSheet(
                             context: context,
                             groupMembersUIDs:
@@ -82,7 +81,7 @@ class _GroupInformationScreenState extends State<GroupInformationScreen> {
                       isMember
                           ? Column(
                               children: [
-                                GoupMembersCard(
+                                GroupMembersCard(
                                   isAdmin: isAdmin,
                                   groupProvider: groupProvider,
                                 ),

@@ -18,7 +18,6 @@ class AllPeopleSearchStream extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // stream the last message collection
     final stream =
         FirebaseFirestore.instance.collection(Constants.users).snapshots();
     return StreamBuilder<QuerySnapshot>(
@@ -26,7 +25,6 @@ class AllPeopleSearchStream extends StatelessWidget {
         builder: (builderContext, snapshot) {
           if (snapshot.hasError) {
             return const Center(
-              child: Text('Something went wrong'),
             );
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,7 +54,7 @@ class AllPeopleSearchStream extends StatelessWidget {
                 final data = doc.data() as Map<String, dynamic>;
                 final item = UserModel.fromMap(data);
                 if (item.uid == uid) {
-                  return Container(); // skip the current user from the list
+                  return Container();
                 }
                 return FriendWidget(
                   friend: item,

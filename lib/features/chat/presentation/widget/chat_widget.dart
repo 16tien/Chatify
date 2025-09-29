@@ -24,24 +24,17 @@ class ChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uid = context.read<AuthenticationProvider>().userModel!.uid;
-    // get the last message
     final lastMessage = chat != null ? chat!.message : group!.lastMessage;
-    // get the senderUID
     final senderUID = chat != null ? chat!.senderUID : group!.senderUID;
 
-    // get the date and time
     final timeSent = chat != null ? chat!.timeSent : group!.timeSent;
     final dateTime = formatDate(timeSent, [hh, ':', nn, ' ', am]);
 
-    // get the image url
     final imageUrl = chat != null ? chat!.contactImage : group!.groupImage;
 
-    // get the name
     final name = chat != null ? chat!.contactName : group!.groupName;
 
-    // get the contactUID
     final contactUID = chat != null ? chat!.contactUID : group!.groupId;
-    // get the messageType
     final messageType = chat != null ? chat!.messageType : group!.messageType;
     return ListTile(
       leading: userImageWidget(

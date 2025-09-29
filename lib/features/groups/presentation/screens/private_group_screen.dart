@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:chat_app/core/constants/constants.dart';
 import 'package:chat_app/features/groups/data/models/group_model.dart';
 import 'package:chat_app/features/authentication/presentation/viewmodels/authentication_provider.dart';
@@ -83,10 +82,8 @@ class MyPrivateGroups extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
-          return const Center(child: Text('Something went wrong'));
         }
         if (snapshot.data!.isEmpty) {
-          return const Center(child: Text('Không có nhóm riêng tư'));
         }
 
         final groups = snapshot.data!;
