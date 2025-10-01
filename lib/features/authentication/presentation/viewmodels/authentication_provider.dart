@@ -688,7 +688,7 @@ class AuthenticationProvider extends ChangeNotifier {
         return {"name": name, "image": imageUrl};
       }
     } catch (e) {
-      print("Lỗi khi lấy dữ liệu người dùng: $e");
+      print("Lỗilấy dữ liệu người dùng: $e");
     }
     return null;
   }
